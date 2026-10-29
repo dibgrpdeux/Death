@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صدى الخرسانة: السر المفقود - دليل طالب ENSTP</title>
+  <title>صدى الخرسانة: الاستدعاء - دليل طالب ENSTP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --bg-dark: #050505;
-      --panel-bg: rgba(15, 18, 22, 0.95);
-      --red-glow: #e63946;
+      --bg-dark: #030303;
+      --panel-bg: rgba(10, 12, 16, 0.95);
+      --red-glow: #ff2a3a;
       --red-dim: #7a121c;
       --accent-gold: #d4af37;
       --text-light: #e0e6ed;
       --text-muted: #94a3b8;
-      --border-color: rgba(230, 57, 70, 0.35);
+      --border-color: rgba(255, 42, 58, 0.4);
     }
 
     * {
@@ -31,239 +31,209 @@
       background-color: var(--bg-dark);
       color: var(--text-light);
       font-family: 'Cairo', sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
       position: relative;
     }
 
     /* Fog Canvas Background */
     #fog-canvas {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       z-index: 1;
       pointer-events: none;
       opacity: 0.6;
     }
 
-    /* Overlay Scanlines & Vignette */
+    /* Screen Overlay Vignette & Glitch */
     .screen-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 2;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 5;
       pointer-events: none;
       background: 
-        radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.9) 100%),
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
+        radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.95) 100%),
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
       background-size: 100% 100%, 100% 4px;
     }
 
-    /* Main Container */
-    .app-container {
-      position: relative;
-      z-index: 10;
-      max-width: 1400px;
-      margin: 0 auto;
+    /* Entry Intro Modal */
+    .intro-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #050505;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       padding: 20px;
-    }
-
-    /* Header & Title */
-    header {
       text-align: center;
-      padding: 30px 10px;
-      border-bottom: 2px solid var(--border-color);
-      margin-bottom: 30px;
-      background: radial-gradient(ellipse at center, rgba(122, 18, 28, 0.3) 0%, transparent 70%);
     }
 
-    header h1 {
+    .intro-box {
+      background: rgba(20, 5, 8, 0.9);
+      border: 2px solid var(--red-glow);
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 500px;
+      box-shadow: 0 0 50px rgba(255, 42, 58, 0.5);
+    }
+
+    .intro-box h1 {
       font-family: 'Amiri', serif;
-      font-size: 3.2rem;
       color: var(--red-glow);
-      text-shadow: 0 0 15px rgba(230, 57, 70, 0.7), 2px 2px 0px #000;
-      letter-spacing: 1px;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
     }
 
-    header p {
-      color: var(--text-muted);
+    .intro-box input {
+      width: 100%;
+      background: #111;
+      border: 1px solid var(--red-glow);
+      color: var(--accent-gold);
+      padding: 12px;
+      margin: 20px 0;
+      border-radius: 6px;
       font-size: 1.1rem;
-      margin-top: 5px;
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
     }
 
-    /* Player Profile Bar */
-    .player-bar {
+    .btn-danger {
+      background: var(--red-dim);
+      color: white;
+      border: 1px solid var(--red-glow);
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .btn-danger:hover {
+      background: var(--red-glow);
+      box-shadow: 0 0 20px var(--red-glow);
+      transform: scale(1.05);
+    }
+
+    /* Main Perspective View (3D/POV Simulation) */
+    .pov-container {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Background Haunted Courtyard */
+    .courtyard-bg {
+      position: absolute;
+      width: 110%; height: 110%;
+      background: url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      filter: grayscale(80%) contrast(150%) brightness(35%) sepia(50%) hue-rotate(300deg);
+      transition: transform 0.1s ease-out;
+    }
+
+    /* Big Wanted Billboard with Student Info */
+    .billboard {
+      position: absolute;
+      top: 15%;
+      background: rgba(0, 0, 0, 0.85);
+      border: 3px double var(--red-glow);
+      padding: 20px 40px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255, 42, 58, 0.6);
+      transform: perspective(500px) rotateX(10deg);
+      animation: flicker 3s infinite alternate;
+    }
+
+    .billboard h3 {
+      color: var(--accent-gold);
+      font-size: 1.2rem;
+    }
+
+    .billboard h2 {
+      color: var(--red-glow);
+      font-size: 2.2rem;
+      font-family: 'Amiri', serif;
+    }
+
+    /* Advancing Entity/Shadow Figure */
+    .advancing-entity {
+      position: absolute;
+      bottom: 5%;
+      width: 320px;
+      height: 480px;
+      background: url('https://images.unsplash.com/photo-1500462825327-021b38e072a2?auto=format&fit=crop&w=800&q=80') center/contain no-repeat;
+      filter: drop-shadow(0 0 25px #ff2a3a) grayscale(100%) contrast(200%);
+      transform-origin: bottom center;
+      transform: scale(0.3);
+      opacity: 0.8;
+      transition: transform 0.2s linear, filter 0.2s;
+    }
+
+    /* HUD Dashboard Overlay */
+    .hud-header {
+      position: fixed;
+      top: 15px; left: 20px; right: 20px;
+      z-index: 10;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: var(--panel-bg);
       border: 1px solid var(--border-color);
-      padding: 15px 25px;
+      padding: 12px 25px;
       border-radius: 8px;
-      margin-bottom: 30px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
     }
 
-    .player-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .player-info input {
-      background: #111;
-      border: 1px solid var(--red-dim);
-      color: var(--accent-gold);
-      padding: 8px 15px;
-      border-radius: 4px;
-      font-family: 'Cairo', sans-serif;
+    .radar-box {
+      color: var(--red-glow);
       font-weight: bold;
-    }
-
-    .score-badge {
-      background: rgba(212, 175, 55, 0.1);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-weight: bold;
-    }
-
-    /* Control Buttons */
-    .btn {
-      background: var(--red-dim);
-      color: white;
-      border: 1px solid var(--red-glow);
-      padding: 10px 20px;
-      font-family: 'Cairo', sans-serif;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      background: var(--red-glow);
-      box-shadow: 0 0 15px rgba(230, 57, 70, 0.8);
-      transform: translateY(-2px);
-    }
-
-    /* Grid Layout */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 30px;
-    }
-
-    @media (max-width: 992px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Map Zones Layout */
-    .zones-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .zone-card {
-      background: var(--panel-bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .zone-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(230, 57, 70, 0.2), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .zone-card:hover {
-      border-color: var(--red-glow);
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 10px 25px rgba(230, 57, 70, 0.3);
-    }
-
-    .zone-card:hover::before {
-      opacity: 1;
-    }
-
-    .zone-icon {
-      font-size: 2.5rem;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .zone-title {
       font-size: 1.2rem;
-      font-weight: bold;
-      color: var(--text-light);
-      margin-bottom: 6px;
-    }
-
-    .zone-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    /* Sidebar / Leaderboard */
-    .sidebar {
-      background: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 25px;
-      height: fit-content;
-    }
-
-    .sidebar h2 {
-      font-size: 1.5rem;
-      color: var(--accent-gold);
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .leaderboard-list {
-      list-style: none;
-    }
-
-    .leaderboard-item {
+    /* Map Zones Floating Grid at Bottom */
+    .hud-zones {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.95rem;
+      gap: 12px;
+      overflow-x: auto;
+      max-width: 95vw;
+      padding: 10px;
     }
 
-    .leaderboard-item:first-child {
-      color: var(--accent-gold);
+    .hud-btn {
+      background: rgba(15, 18, 22, 0.9);
+      border: 1px solid var(--border-color);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
       font-weight: bold;
-      background: rgba(212, 175, 55, 0.05);
-      border-radius: 4px;
+      white-space: nowrap;
+      transition: all 0.2s;
+      font-family: 'Cairo', sans-serif;
     }
 
-    .rank {
-      width: 25px;
-      font-weight: bold;
+    .hud-btn:hover {
+      background: var(--red-dim);
+      border-color: var(--red-glow);
+      transform: translateY(-3px);
     }
 
     /* Modal Display */
@@ -286,450 +256,216 @@
       background: #0f1216;
       border: 2px solid var(--red-glow);
       width: 100%;
-      max-width: 750px;
-      max-height: 88vh;
+      max-width: 700px;
+      max-height: 85vh;
       overflow-y: auto;
       border-radius: 12px;
       padding: 30px;
       position: relative;
-      box-shadow: 0 0 45px rgba(230, 57, 70, 0.5);
+      box-shadow: 0 0 50px rgba(255, 42, 58, 0.6);
     }
 
     .close-modal {
       position: absolute;
-      top: 15px;
-      left: 20px;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 2rem;
+      top: 15px; left: 20px;
+      background: none; border: none;
+      color: var(--text-muted); font-size: 2rem;
       cursor: pointer;
-      z-index: 5;
     }
 
-    .close-modal:hover {
-      color: var(--red-glow);
-    }
-
-    /* Horror Image Banner Inside Modal */
-    .modal-horror-img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid var(--red-dim);
-      margin-bottom: 20px;
-      filter: grayscale(40%) contrast(120%) brightness(80%);
-      box-shadow: inset 0 0 20px #000;
-      transition: filter 0.3s;
-    }
-
-    .modal-horror-img:hover {
-      filter: grayscale(0%) contrast(130%) brightness(95%);
-    }
-
-    .modal-header {
-      color: var(--red-glow);
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 10px;
-    }
-
-    .info-section {
-      margin-bottom: 20px;
-      background: rgba(255,255,255,0.02);
-      padding: 15px;
-      border-right: 3px solid var(--red-dim);
-      border-radius: 4px;
-    }
-
-    .info-section h4 {
-      color: var(--accent-gold);
-      margin-bottom: 8px;
-    }
-
-    .quiz-container {
-      margin-top: 25px;
-      background: rgba(122, 18, 28, 0.18);
-      border: 1px dashed var(--red-glow);
-      padding: 20px;
-      border-radius: 8px;
-    }
+    .close-modal:hover { color: var(--red-glow); }
 
     .quiz-option {
-      display: block;
-      width: 100%;
-      text-align: right;
-      background: #181d24;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: white;
-      padding: 12px 15px;
-      margin: 10px 0;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
+      display: block; width: 100%; text-align: right;
+      background: #181d24; border: 1px solid rgba(255,255,255,0.1);
+      color: white; padding: 12px 15px; margin: 10px 0;
+      border-radius: 4px; cursor: pointer;
     }
 
-    .quiz-option:hover {
-      background: var(--red-dim);
+    .quiz-option:hover { background: var(--red-dim); }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
   </style>
 </head>
 <body>
 
-  <canvas id="fog-canvas"></canvas>
-  <div class="screen-overlay"></div>
-
-  <div class="app-container">
-    <header>
-      <h1>صدى الخرسانة: السر المفقود</h1>
-      <p>دليل طالب المدرسة الوطنية العليا لأشغال العمومية (ENSTP) - تجربة تفاعلية غامضة</p>
-    </header>
-
-    <div class="player-bar">
-      <div class="player-info">
-        <label>اسم المستكشف:</label>
-        <input type="text" id="player-name" value="طالب جديد" onchange="updatePlayerName(this.value)">
-      </div>
-      <div class="score-badge">النقاط: <span id="player-score">0</span> XP</div>
-      <button class="btn" onclick="toggleAudio()">🔊 تشغيل/إيقاف الصوت</button>
-    </div>
-
-    <div class="main-grid">
-      <!-- Left: Interactive Zones Map -->
-      <div class="zones-grid" id="zones-container"></div>
-
-      <!-- Right: Global Leaderboard -->
-      <div class="sidebar">
-        <h2>🏆 الترتيب المباشر للناجين</h2>
-        <ul class="leaderboard-list" id="leaderboard"></ul>
-      </div>
+  <!-- Entry Name Prompt -->
+  <div class="intro-screen" id="intro-screen">
+    <div class="intro-box">
+      <h1>صدى الخرسانة</h1>
+      <p>أدخل بياناتك لدخول الساحة وحل ألغاز دليل ENSTP</p>
+      <input type="text" id="input-student-name" placeholder="أدخل اسمك الكامل..." value="طالب جديد">
+      <button class="btn-danger" onclick="startExperience()">تأكيد الاستدعاء لبدء اللعبة 👁️</button>
     </div>
   </div>
 
-  <!-- Modal window for details & challenge -->
+  <canvas id="fog-canvas"></canvas>
+  <div class="screen-overlay"></div>
+
+  <!-- HUD Control Bar -->
+  <div class="hud-header">
+    <div>
+      <span style="color:var(--text-muted)">الضحية:</span>
+      <b id="hud-name" style="color:var(--accent-gold)">طالب جديد</b>
+    </div>
+
+    <div class="radar-box">
+      ⚠️ اقتراب الجموع: <span id="distance-display">100m</span>
+    </div>
+
+    <div>
+      النقاط: <b id="hud-score" style="color:var(--accent-gold)">0</b> XP
+    </div>
+  </div>
+
+  <!-- 3D POV World Scene -->
+  <div class="pov-container" id="pov-scene">
+    <div class="courtyard-bg" id="courtyard"></div>
+
+    <!-- Wanted Board with Student Info -->
+    <div class="billboard">
+      <h3>⚠️ الضحية القادمة في ساحة ENSTP ⚠️</h3>
+      <h2 id="billboard-name">طالب جديد</h2>
+      <p style="color:var(--text-muted)">التخصص: الهندسة المدنية والأشغال العمومية</p>
+    </div>
+
+    <!-- Advancing Entity Figure -->
+    <div class="advancing-entity" id="entity-figure"></div>
+  </div>
+
+  <!-- Bottom Interactive Guide Zones -->
+  <div class="hud-zones" id="hud-zones-list"></div>
+
+  <!-- Challenge Modal -->
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <button class="close-modal" onclick="closeModal()">&times;</button>
-      <img id="modal-img" class="modal-horror-img" src="" alt="Horror Scene">
-      <h2 class="modal-header" id="modal-title">عنوان القطاع</h2>
+      <h2 style="color:var(--red-glow); margin-bottom:15px;" id="modal-title">عنوان القطاع</h2>
       <div id="modal-info"></div>
-      <div class="quiz-container" id="modal-quiz"></div>
+      <div style="margin-top:20px; background:rgba(122,18,28,0.2); padding:15px; border:1px dashed var(--red-glow); border-radius:6px;" id="modal-quiz"></div>
     </div>
   </div>
 
   <script>
-    // Audio Context Setup (Free Procedural Web Audio API Sound Effects)
+    // Audio Context Setup
     let audioCtx = null;
     let isAudioPlaying = false;
-    let droneOsc = null;
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-
-    function toggleAudio() {
-      initAudio();
-      if (isAudioPlaying) {
-        if (droneOsc) droneOsc.stop();
-        isAudioPlaying = false;
-      } else {
-        droneOsc = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        droneOsc.type = 'sawtooth';
-        droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // Low creepy hum
-        
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(200, audioCtx.currentTime);
-
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-
-        droneOsc.connect(filter);
-        filter.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        droneOsc.start();
-        isAudioPlaying = true;
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     function playScareSound() {
-      if (!audioCtx || !isAudioPlaying) return;
+      initAudio();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
-      osc.type = 'square';
-      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.4);
+      osc.stop(audioCtx.currentTime + 0.5);
     }
-
-    // Data - 10 ENSTP Sectors with Scary Cinematic Visuals
-    const zonesData = [
-      {
-        id: "map",
-        title: "الخريطة والموقع",
-        icon: "🗺️",
-        img: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=800&q=80",
-        desc: "استكشف المباني بالقبة",
-        info: [
-          { subtitle: "الموقع الجغرافي", content: "تقع المدرسة الوطنية العليا لأشغال العمومية بمدينة القبة، الجزائر العاصمة." },
-          { subtitle: "الأجنحة الرئيسية", content: "تضم الجناح البيدغوجي، المدرجات الرئيسية، ومخبر ميكانيكا التربة والخرسانة." }
-        ],
-        quiz: {
-          q: "أين تقع المدرسة الوطنية العليا لأشغال العمومية؟",
-          options: ["القبة، الجزائر العاصمة", "باب الزوار", "الحراش"],
-          correct: 0
-        }
-      },
-      {
-        id: "admin",
-        title: "الإدارة وشؤون الطلبة",
-        icon: "🏛️",
-        img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
-        desc: "غرفة المحفوظات والملفات",
-        info: [
-          { subtitle: "الوثائق المطلوبة", content: "شهادة التسجيل، بطاقة الطالب، والوثائق الخاصة بإعادة التسجيل والتبرئة." },
-          { subtitle: "مكتب مصلحة الدراسة", content: "يتكفل بمتابعة الغيابات، العطل الأكاديمية، وتسليم كشوف النقاط." }
-        ],
-        quiz: {
-          q: "ما هي الجهة المسؤولة عن تسليم كشوف النقاط؟",
-          options: ["المكتبة", "مصلحة شؤون الطلبة", "المطعم الجامعي"],
-          correct: 1
-        }
-      },
-      {
-        id: "profs",
-        title: "الأساتذة والمكاتب",
-        icon: "👥",
-        img: "https://images.unsplash.com/photo-1500462825327-021b38e072a2?auto=format&fit=crop&w=800&q=80",
-        desc: "ممر الظلال والساعات المكتبية",
-        info: [
-          { subtitle: "التخصصات والهيئة التدريسية", content: "تضم نخبة من الأساتذة في مجالات الهياكل، الطرق، الجسور، وميكانيكا التربة." },
-          { subtitle: "الساعات المكتبية", content: "يمكن التواصل مع الأساتذة عبر إيميلاتهم الرسمية أو زيارة مكاتبهم خلال الساعات المحددة." }
-        ],
-        quiz: {
-          q: "كيف يمكنك حجز موعد مع الأستاذ؟",
-          options: ["عبر البريد الإلكتروني الرسمي والساعات المكتبية", "عبر مواقع التواصل", "بدون موعد في أي وقت"],
-          correct: 0
-        }
-      },
-      {
-        id: "schedule",
-        title: "استعمال الزمن",
-        icon: "⏳",
-        img: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
-        desc: "برج الساعة والجدول الأسبوعي",
-        info: [
-          { subtitle: "توزيع الحصص", content: "تنقسم الحصص بين المحاضرات العامة (Cours) والتطبيقات الموجهة (TD) والتطبيقات التطبيقية (TP)." },
-          { subtitle: "نظام الحضور", content: "النيابة البيدغوجية تطبق قانون صارم بشأن الحضور في الـ TD والـ TP (3 غيابات تؤدي للإقصاء)." }
-        ],
-        quiz: {
-          q: "كم عدد الغيابات غير المبررة التي تؤدي للإقصاء في المادة؟",
-          options: ["5 غيابات", "3 غيابات", "10 غيابات"],
-          correct: 1
-        }
-      },
-      {
-        id: "exams",
-        title: "الفروض والاختبارات",
-        icon: "📝",
-        img: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&w=800&q=80",
-        desc: "غرفة التقييم والامتحانات",
-        info: [
-          { subtitle: "حساب المعدل", content: "يتم حساب معدل المادة بناءً على امتحان السداسي + علامات الـ TD/TP والإنضباط." },
-          { subtitle: "الامتحانات الاستدراكية", content: "تُنظم دورة استدراكية للطلبة الذين لم يحققوا معدل النجاح في السداسي." }
-        ],
-        quiz: {
-          q: "كيف يتم تقييم التطبيقات الموجهة TD؟",
-          options: ["الاختبارات القصيرة (Interros) والواجبات", "الحضور فقط", "لا توجد علامة"],
-          correct: 0
-        }
-      },
-      {
-        id: "transport",
-        title: "النقل الجامعي",
-        icon: "🚌",
-        img: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
-        desc: "محطة حافلات CUSTU",
-        info: [
-          { subtitle: "خطوط الحافلات", content: "تتوفر حافلات النقل الجامعي لنقل الطلبة نحو المقرات والإقامات الجامعية المختلفة." },
-          { subtitle: "شبكة المترو", content: "محطة المترو القريبة تتيح تنقلاً سريعاً نحو وسط العاصمة والمناطق المجاورة." }
-        ],
-        quiz: {
-          q: "ما هي الوسيلة الأكثر استخداماً للنقل للطلبة المقيمين؟",
-          options: ["حافلات النقل الجامعي (CUSTU) والمترو", "الطيران", "السيارات الخاصة فقط"],
-          correct: 0
-        }
-      },
-      {
-        id: "residence",
-        title: "الإقامة والإطعام",
-        icon: "🏢",
-        img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
-        desc: "الملحق السكني 13",
-        info: [
-          { subtitle: "السكن الجامعي", content: "توفير الغرف المجهزة للطلبة القادمين من الولايات البعيدة وفق الشروط." },
-          { subtitle: "المطعم الجامعي", content: "تقديم الوجبات الأساسية (الغداء والعشاء) ببطاقة الطالب الجامعية." }
-        ],
-        quiz: {
-          q: "ما هو الشرط الأساسي لدخول المطعم الجامعي؟",
-          options: ["إظهار بطاقة الطالب الجامعية", "جواز السفر", "بدون أي وثيقة"],
-          correct: 0
-        }
-      },
-      {
-        id: "sports",
-        title: "الرياضة والملاعب",
-        icon: "⚽",
-        img: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80",
-        desc: "الملعب المهجور والأنشطة",
-        info: [
-          { subtitle: "المركّب الرياضي", content: "يحتوي على ملاعب لكرة القدم، كرة السلة، والقاعات الرياضية المتعددة." },
-          { subtitle: "الدوريات الطلابية", content: "تُنظم المدرسة دوريات كروية بين الدفعات والتخصصات طوال السنة الدراسية." }
-        ],
-        quiz: {
-          q: "هل توفر المدرسة دوريات رياضية للطلبة؟",
-          options: ["نعم، دوريات بين الدفعات والتخصصات", "لا توجد أي أنشطة", "للأساتذة فقط"],
-          correct: 0
-        }
-      },
-      {
-        id: "tourism",
-        title: "السياحة والجوار",
-        icon: "🌲",
-        img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80",
-        desc: "الاستكشاف خارج الأسوار",
-        info: [
-          { subtitle: "معالم قريبة", content: "حديقة الحامة التجارية ومقام الشهيد يقعان على مسافة قصيرة من القبة." },
-          { subtitle: "الملاذات الترفيهية", content: "المراكز التجارية والمقاهي المجاورة تتيح مكاناً للاستراحة بعد ساعات الدراسة." }
-        ],
-        quiz: {
-          q: "ما هي الحديقة الشهيرة القريبة من منطقة القبة؟",
-          options: ["حديقة التجارب بالحامة", "حديقة التسلية ببن عكنون", "حديقة بلوزداد"],
-          correct: 0
-        }
-      },
-      {
-        id: "shops",
-        title: "المحلات والتسوق",
-        icon: "📐",
-        img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
-        desc: "المتجر المنسي والأدوات",
-        info: [
-          { subtitle: "أدوات الرسم الهندسي", content: "شراء مساطر T، ورق المليمتر، والأقلام التقنية المخصصة للرسم الميكانيكي والهندسي." },
-          { subtitle: "مراكز الطباعة", content: "مكتبات سريعة قريبة لطباعة الدروس (Polycopies) والبحوث." }
-        ],
-        quiz: {
-          q: "ما هي الأداة الأساسية للرسم الهندسي في السنة الأولى؟",
-          options: ["مسطرة T والأقلام التقنية", "الألوان الزيتية", "الفرشاة"],
-          correct: 0
-        }
-      }
-    ];
 
     // State Variables
-    let playerScore = parseInt(localStorage.getItem('enstp_score') || '0');
-    let playerName = localStorage.getItem('enstp_player') || 'طالب جديد';
-    let solvedQuizzes = JSON.parse(localStorage.getItem('enstp_solved') || '[]');
+    let playerName = "طالب جديد";
+    let playerScore = 0;
+    let distance = 100;
+    let entityScale = 0.3;
+    let gameLoopInterval = null;
+    let solvedQuizzes = [];
 
-    // Leaderboard Data
-    let leaderboardData = [
-      { name: "أمِين (مهندس الطرق)", score: 100 },
-      { name: "سَارة (تخصص جسور)", score: 80 },
-      { name: "يَاسين (منشآت فنية)", score: 60 }
+    // ENSTP Guide Data
+    const zonesData = [
+      { id: "map", title: "🗺️ الخريطة", info: "تقع المدرسة بمدينة القبة، العاصمة.", q: "أين تقع المدرسة الوطنية العليا لأشغال العمومية؟", options: ["القبة", "باب الزوار", "الحراش"], correct: 0 },
+      { id: "admin", title: "🏛️ الإدارة", info: "مصلحة الدراسات تتكفل بالتسجيلات وكشوف النقاط.", q: "من يسلم كشوف النقاط؟", options: ["المكتبة", "مصلحة شؤون الطلبة", "المطعم"], correct: 1 },
+      { id: "profs", title: "👥 الأساتذة", info: "تواصل مع الأساتذة عبر إيميلاتهم والساعات المكتبية.", q: "كيف تحجز موعداً مع الأستاذ؟", options: ["عبر البريد الرسمى والساعات المكتبية", "في الشارع", "بدون موعد"], correct: 0 },
+      { id: "schedule", title: "⏳ الجدول", info: "3 غيابات غير مبررة في TD/TP تؤدي للإقصاء.", q: "كم غياباً يسبب الإقصاء؟", options: ["5 غيابات", "3 غيابات", "10 غيابات"], correct: 1 },
+      { id: "exams", title: "📝 الامتحانات", info: "يتم تقييم المادة بناءً على الامتحان والـ TD.", q: "كيف يُقيّم قسم الـ TD؟", options: ["اختبارات قصيرة وواجبات", "حضور فقط", "بدون علامة"], correct: 0 },
+      { id: "transport", title: "🚌 النقل", info: "حافلات CUSTU والمترو يسهلان التنقل.", q: "ما هي وسيلة النقل الأساسية للطلبة؟", options: ["حافلات CUSTU والمترو", "الطيران", "سيارة خاصة"], correct: 0 },
+      { id: "residence", title: "🏢 الإقامة", info: "الدخول للمطعم يتطلب بطاقة الطالب.", q: "ما الشرط لدخول المطعم الجامعي؟", options: ["إظهار بطاقة الطالب", "جواز السفر", "بدون وثيقة"], correct: 0 },
+      { id: "sports", title: "⚽ الرياضة", info: "تُنظم دوريات رياضية بين التخصصات.", q: "هل توفر المدرسة دوريات رياضية؟", options: ["نعم بين التخصصات والدفعات", "لا توجد", "للأساتذة فقط"], correct: 0 }
     ];
 
-    // Render Map Zones
-    function renderZones() {
-      const container = document.getElementById('zones-container');
-      container.innerHTML = '';
+    function startExperience() {
+      const nameInput = document.getElementById('input-student-name').value.trim();
+      if (nameInput) playerName = nameInput;
+
+      document.getElementById('hud-name').innerText = playerName;
+      document.getElementById('billboard-name').innerText = playerName;
+      document.getElementById('intro-screen').style.display = 'none';
+
+      playScareSound();
+      renderHUDZones();
+
+      // Start Entity Advancing Game Loop
+      gameLoopInterval = setInterval(advanceEntity, 1000);
+    }
+
+    function advanceEntity() {
+      if (distance > 0) {
+        distance -= 2;
+        entityScale += 0.015;
+        document.getElementById('distance-display').innerText = distance + "m";
+        
+        const entity = document.getElementById('entity-figure');
+        entity.style.transform = `scale(${entityScale})`;
+        
+        // Perspective Shake Effect when close
+        if (distance < 30) {
+          document.getElementById('courtyard').style.transform = `scale(1.05) translate(${Math.random()*6-3}px, ${Math.random()*6-3}px)`;
+        }
+      } else {
+        clearInterval(gameLoopInterval);
+        playScareSound();
+        alert(`🚨 أحيطت بك أشباح الساحة يا ${playerName}! لم تجب بسرعة كافية على الدليل. أعد المحاولة!`);
+        resetGame();
+      }
+    }
+
+    function resetGame() {
+      distance = 100;
+      entityScale = 0.3;
+      document.getElementById('distance-display').innerText = "100m";
+      document.getElementById('entity-figure').style.transform = "scale(0.3)";
+      gameLoopInterval = setInterval(advanceEntity, 1000);
+    }
+
+    function renderHUDZones() {
+      const list = document.getElementById('hud-zones-list');
+      list.innerHTML = '';
       zonesData.forEach(zone => {
         const isSolved = solvedQuizzes.includes(zone.id);
-        const card = document.createElement('div');
-        card.className = 'zone-card';
-        card.onclick = () => openModal(zone);
-        card.innerHTML = `
-          <span class="zone-icon">${zone.icon}</span>
-          <div class="zone-title">${zone.title}</div>
-          <div class="zone-desc">${zone.desc}</div>
-          ${isSolved ? '<span style="color:var(--accent-gold); font-size:0.8rem; margin-top:5px; display:block;">✔ تم النجاح</span>' : ''}
-        `;
-        container.appendChild(card);
+        const btn = document.createElement('button');
+        btn.className = 'hud-btn';
+        btn.innerHTML = `${zone.title} ${isSolved ? '✔' : ''}`;
+        btn.onclick = () => openModal(zone);
+        list.appendChild(btn);
       });
     }
 
-    // Render Leaderboard
-    function renderLeaderboard() {
-      const list = document.getElementById('leaderboard');
-      list.innerHTML = '';
-
-      let fullList = [...leaderboardData, { name: playerName, score: playerScore }];
-      fullList.sort((a, b) => b.score - a.score);
-
-      fullList.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.className = 'leaderboard-item';
-        li.innerHTML = `
-          <span><span class="rank">${index + 1}.</span> ${item.name}</span>
-          <span style="color:var(--accent-gold)">${item.score} XP</span>
-        `;
-        list.appendChild(li);
-      });
-    }
-
-    // Player Stats Updates
-    function updatePlayerName(val) {
-      playerName = val || 'طالب جديد';
-      localStorage.setItem('enstp_player', playerName);
-      renderLeaderboard();
-    }
-
-    function addScore(points) {
-      playerScore += points;
-      document.getElementById('player-score').innerText = playerScore;
-      localStorage.setItem('enstp_score', playerScore);
-      renderLeaderboard();
-    }
-
-    // Modal Control
     function openModal(zone) {
-      playScareSound();
       document.getElementById('modal-title').innerText = zone.title;
-      document.getElementById('modal-img').src = zone.img;
+      document.getElementById('modal-info').innerHTML = `<p>${zone.info}</p>`;
       
-      const infoContainer = document.getElementById('modal-info');
-      infoContainer.innerHTML = '';
-      zone.info.forEach(item => {
-        infoContainer.innerHTML += `
-          <div class="info-section">
-            <h4>${item.subtitle}</h4>
-            <p>${item.content}</p>
-          </div>
-        `;
-      });
-
       const quizContainer = document.getElementById('modal-quiz');
       if (solvedQuizzes.includes(zone.id)) {
-        quizContainer.innerHTML = `<p style="color:var(--accent-gold); text-align:center;">✨ لقد نجحت في فك شفرة هذا القسم بنجاح!</p>`;
+        quizContainer.innerHTML = `<p style="color:var(--accent-gold)">✨ تم فك شفرة هذا القسم بنجاح!</p>`;
       } else {
         quizContainer.innerHTML = `
-          <h4>⚠️ لغز البقاء (اختبار المعلومات):</h4>
-          <p style="margin-bottom:10px;">${zone.quiz.q}</p>
-          ${zone.quiz.options.map((opt, idx) => `
-            <button class="quiz-option" onclick="checkAnswer('${zone.id}', ${idx}, ${zone.quiz.correct})">${opt}</button>
+          <h4>⚠️ لغز النجاة (أجب لتبطئة الجموع):</h4>
+          <p style="margin-bottom:10px;">${zone.q}</p>
+          ${zone.options.map((opt, idx) => `
+            <button class="quiz-option" onclick="checkAnswer('${zone.id}', ${idx}, ${zone.correct})">${opt}</button>
           `).join('')}
         `;
       }
-
       document.getElementById('modal').classList.add('active');
     }
 
@@ -739,15 +475,19 @@
 
     function checkAnswer(zoneId, selected, correct) {
       if (selected === correct) {
-        alert("🎉 إجابة صحيحة! تم كسب +10 نقاط معرفية.");
+        alert("🎉 إجابة صحيحة! تم دحر الجموع للخلف بكسب +20 متراً!");
         solvedQuizzes.push(zoneId);
-        localStorage.setItem('enstp_solved', JSON.stringify(solvedQuizzes));
-        addScore(10);
-        renderZones();
+        playerScore += 10;
+        distance = Math.min(100, distance + 20);
+        entityScale = Math.max(0.3, entityScale - 0.15);
+        document.getElementById('hud-score').innerText = playerScore;
+        renderHUDZones();
         closeModal();
       } else {
         playScareSound();
-        alert("❌ إجابة خاطئة! احذر من ظلال المدرسة...");
+        distance = Math.max(0, distance - 15);
+        alert("❌ إجابة خاطئة! الجموع تتقدم فوراً بمقدار -15 متراً!");
+        closeModal();
       }
     }
 
@@ -763,7 +503,7 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 35; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -777,9 +517,7 @@
     function animateFog() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-
+        p.x += p.speedX; p.y += p.speedY;
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
@@ -787,7 +525,7 @@
 
         ctx.beginPath();
         let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        grad.addColorStop(0, `rgba(230, 57, 70, ${p.alpha})`);
+        grad.addColorStop(0, `rgba(255, 42, 58, ${p.alpha})`);
         grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -796,12 +534,6 @@
       requestAnimationFrame(animateFog);
     }
     animateFog();
-
-    // Initial Launch Setup
-    document.getElementById('player-name').value = playerName;
-    document.getElementById('player-score').innerText = playerScore;
-    renderZones();
-    renderLeaderboard();
   </script>
 </body>
 </html>

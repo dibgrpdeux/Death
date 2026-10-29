@@ -1,167 +1,779 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كابوس الحلقة اللانهائية - المرحلة 1</title>
-    <style>
-        :root {
-            --blood: #7f1d1d;
-            --dark: #020205;
-        }
-        body {
-            background-color: var(--dark);
-            color: #d1d5db;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        .horror-frame {
-            width: 100%;
-            max-width: 600px;
-            background: #09090e;
-            border: 2px solid var(--blood);
-            padding: 30px;
-            box-shadow: 0 0 35px rgba(127, 29, 29, 0.6);
-            position: relative;
-        }
-        .flash-red {
-            animation: flash 0.3s ease-out;
-        }
-        @keyframes flash {
-            0% { background: #ff0000; opacity: 0.8; }
-            100% { background: transparent; }
-        }
-        .glitch-title {
-            color: var(--blood);
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-            text-shadow: 0 0 8px rgba(127, 29, 29, 0.8);
-        }
-        .story-box {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            margin-bottom: 25px;
-            min-height: 150px;
-            border-left: 3px solid var(--blood);
-            padding-left: 15px;
-        }
-        .choice-btn {
-            background: #0f0f15;
-            color: #f3f4f6;
-            border: 1px solid #374151;
-            padding: 14px;
-            text-align: right;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 12px;
-            transition: all 0.2s;
-        }
-        .choice-btn:hover {
-            background: var(--blood);
-            color: #fff;
-            border-color: #ef4444;
-        }
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            border-bottom: 1px dashed #333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صدى الخرسانة: السر المفقود - دليل طالب ENSTP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #050505;
+      --panel-bg: rgba(15, 18, 22, 0.92);
+      --red-glow: #e63946;
+      --red-dim: #7a121c;
+      --accent-gold: #d4af37;
+      --text-light: #e0e6ed;
+      --text-muted: #94a3b8;
+      --border-color: rgba(230, 57, 70, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      font-family: 'Cairo', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Fog Canvas Background */
+    #fog-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* Overlay Scanlines & Vignette */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.85) 100%),
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 100%, 100% 4px;
+    }
+
+    /* Main Container */
+    .app-container {
+      position: relative;
+      z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header & Title */
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 30px;
+      background: radial-gradient(ellipse at center, rgba(122, 18, 28, 0.2) 0%, transparent 70%);
+    }
+
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: 3.2rem;
+      color: var(--red-glow);
+      text-shadow: 0 0 15px rgba(230, 57, 70, 0.6), 2px 2px 0px #000;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+
+    /* Player Profile Bar */
+    .player-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      padding: 15px 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    }
+
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .player-info input {
+      background: #111;
+      border: 1px solid var(--red-dim);
+      color: var(--accent-gold);
+      padding: 8px 15px;
+      border-radius: 4px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: bold;
+    }
+
+    .score-badge {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    /* Control Buttons */
+    .btn {
+      background: var(--red-dim);
+      color: white;
+      border: 1px solid var(--red-glow);
+      padding: 10px 20px;
+      font-family: 'Cairo', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background: var(--red-glow);
+      box-shadow: 0 0 15px rgba(230, 57, 70, 0.8);
+      transform: translateY(-2px);
+    }
+
+    /* Grid Layout */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 992px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Map Zones Layout */
+    .zones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .zone-card {
+      background: var(--panel-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .zone-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, rgba(230, 57, 70, 0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .zone-card:hover {
+      border-color: var(--red-glow);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 25px rgba(230, 57, 70, 0.25);
+    }
+
+    .zone-card:hover::before {
+      opacity: 1;
+    }
+
+    .zone-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .zone-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .zone-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Sidebar / Leaderboard */
+    .sidebar {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 25px;
+      height: fit-content;
+    }
+
+    .sidebar h2 {
+      font-size: 1.5rem;
+      color: var(--accent-gold);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .leaderboard-list {
+      list-style: none;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .leaderboard-item:first-child {
+      color: var(--accent-gold);
+      font-weight: bold;
+      background: rgba(212, 175, 55, 0.05);
+      border-radius: 4px;
+    }
+
+    .rank {
+      width: 25px;
+      font-weight: bold;
+    }
+
+    /* Modal Display */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0f1216;
+      border: 2px solid var(--red-glow);
+      width: 100%;
+      max-width: 750px;
+      max-height: 85vh;
+      overflow-y: auto;
+      border-radius: 12px;
+      padding: 30px;
+      position: relative;
+      box-shadow: 0 0 40px rgba(230, 57, 70, 0.4);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .close-modal:hover {
+      color: var(--red-glow);
+    }
+
+    .modal-header {
+      color: var(--red-glow);
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .info-section {
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.02);
+      padding: 15px;
+      border-right: 3px solid var(--red-dim);
+      border-radius: 4px;
+    }
+
+    .info-section h4 {
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+    }
+
+    .quiz-container {
+      margin-top: 25px;
+      background: rgba(122, 18, 28, 0.15);
+      border: 1px dashed var(--red-glow);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: right;
+      background: #181d24;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: white;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .quiz-option:hover {
+      background: var(--red-dim);
+    }
+  </style>
 </head>
-<body id="body-context">
+<body>
 
-<div class="horror-frame">
-    <div class="status-bar">
-        <div>📍 الموقع: <span style="color: #ef4444;">حافلة مجهولة 🚌</span></div>
-        <div>🧠 مؤشر الرعب: <span id="fear-val" style="color: #ef4444;">0%</span></div>
+  <canvas id="fog-canvas"></canvas>
+  <div class="screen-overlay"></div>
+
+  <div class="app-container">
+    <header>
+      <h1>صدى الخرسانة: السر المفقود</h1>
+      <p>دليل طالب المدرسة الوطنية العليا لأشغال العمومية (ENSTP) - تجربة تفاعلية غامضة</p>
+    </header>
+
+    <div class="player-bar">
+      <div class="player-info">
+        <label>اسم المستكشف:</label>
+        <input type="text" id="player-name" value="طالب جديد" onchange="updatePlayerName(this.value)">
+      </div>
+      <div class="score-badge">النقاط: <span id="player-score">0</span> XP</div>
+      <button class="btn" onclick="toggleAudio()">🔊 تشغيل/إيقاف الصوت</button>
     </div>
 
-    <div class="glitch-title">🎃 كابوس الـ 24 ساعة - مستقل 🎃</div>
+    <div class="main-grid">
+      <!-- Left: Interactive Zones Map -->
+      <div class="zones-grid" id="zones-container"></div>
 
-    <div class="story-box" id="text-node">
-        تفتح عينيك بصعوبة على صوت محرك يهتز بعنف. عقارب ساعتك تدور للخلف بشكل مجنون، وهاتفك يظهر تاريخ 31 أكتوبر. 
-        تجد نفسك وحيداً داخل حافلة نقل قديمة تسير بسرعة في شوارع ضبابية مرعبة لا تعرف اسمها في الجزائر العاصمة، والأبواب مغلقة بإحكام! 
-        تلمح في المرآة الخلفية ظلالاً داكنة لركاب بلا ملامح يقتربون منك.. فجأة يتوقف المحرك وتفتح الأبواب في ساحة معتمة تماماً. للهروب والوصول للمدرسة، ماذا تفعل؟
+      <!-- Right: Global Leaderboard -->
+      <div class="sidebar">
+        <h2>🏆 الترتيب المباشر للناجين</h2>
+        <ul class="leaderboard-list" id="leaderboard"></ul>
+      </div>
     </div>
+  </div>
 
-    <div id="choices-node">
-        <button class="choice-btn" onclick="nextStage(true)">🚏 النزول فوراً والركض نحو المحطة المضيئة للنقل العام (المترو) للتوجه للمدرسة</button>
-        <button class="choice-btn" onclick="nextStage(false)">🚌 البقاء داخل الحافلة المجهولة وانتظار عودة السائق الغامض</button>
+  <!-- Modal window for details & challenge -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h2 class="modal-header" id="modal-title">عنوان القطاع</h2>
+      <div id="modal-info"></div>
+      <div class="quiz-container" id="modal-quiz"></div>
     </div>
-</div>
+  </div>
 
-<script>
-    let fear = 0;
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  <script>
+    // Audio Context Setup (Free Procedural Web Audio API Sound Effects)
+    let audioCtx = null;
+    let isAudioPlaying = false;
+    let droneOsc = null;
 
-    function playScarySound(type) {
-        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
 
-        if (type === 'heartbeat') {
-            osc.frequency.setValueAtTime(55, audioCtx.currentTime); 
-            osc.type = 'sine';
-            gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-        } else if (type === 'scream') {
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.frequency.linearRampToValueAtTime(150, audioCtx.currentTime + 0.5);
-            osc.type = 'sawtooth';
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+    function toggleAudio() {
+      initAudio();
+      if (isAudioPlaying) {
+        if (droneOsc) droneOsc.stop();
+        isAudioPlaying = false;
+      } else {
+        droneOsc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        droneOsc.type = 'sawtooth';
+        droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // Low creepy hum (A1)
+        
+        // Lowpass filter for deep dark sound
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+
+        droneOsc.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        droneOsc.start();
+        isAudioPlaying = true;
+      }
+    }
+
+    function playScareSound() {
+      if (!audioCtx || !isAudioPlaying) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.4);
+    }
+
+    // Interactive Data - 10 ENSTP Sectors
+    const zonesData = [
+      {
+        id: "map",
+        title: "الخريطة والموقع",
+        icon: "🗺️",
+        desc: "استكشف المباني بالقبة",
+        info: [
+          { subtitle: "الموقع الجغرافي", content: "تقع المدرسة الوطنية العليا لأشغال العمومية بمدينة القبة، الجزائر العاصمة." },
+          { subtitle: "الأجنحة الرئيسية", content: "تضم الجناح البيدغوجي، المدرجات الرئيسية، ومخبر ميكانيكا التربة والخرسانة." }
+        ],
+        quiz: {
+          q: "أين تقع المدرسة الوطنية العليا لأشغال العمومية؟",
+          options: ["القبة، الجزائر العاصمة", "باب الزوار", "الحراش"],
+          correct: 0
         }
-    }
-
-    setInterval(() => {
-        if(fear > 0 && fear < 100) { playScarySound('heartbeat'); }
-    }, 1200);
-
-    function nextStage(isCorrect) {
-        const body = document.getElementById('body-context');
-        const textNode = document.getElementById('text-node');
-        const choicesNode = document.getElementById('choices-node');
-
-        if (isCorrect) {
-            playScarySound('heartbeat');
-            body.classList.add('flash-red');
-            setTimeout(() => body.classList.remove('flash-red'), 300);
-            
-            textNode.innerHTML = `<b style="color:#10b981;">🎯 أحسنت النجاة!</b><br><br>نزلت بسرعة ودخلت نفق المترو المضيء، متتبعاً لوحات النقل العام بالعاصمة حتى وصلت أخيراً إلى أسوار مدرسة الأشغال العمومية (ENSTP). لكن بمجرد دخولك للمبنى الإداري المركزي، انغلق الباب الحديدي خلفك بقوة وصوت مرعب يستدعي اسمك لغرفة مدير الدراسات...`;
-            choicesNode.innerHTML = `<button class="choice-btn" style="text-align:center; border-color:#10b981;" onclick="goToStage2()">🏢 الدخول لمكتب مدير الدراسات (المرحلة 2)</button>`;
-        } else {
-            fear += 40;
-            document.getElementById('fear-val').innerText = fear + "%";
-            playScarySound('scream');
-            body.style.filter = `blur(${fear / 8}px) grayscale(${fear / 100})`;
-            
-            if (fear >= 100) {
-                textNode.innerHTML = `<b style="color:#ef4444;">💀 تم الإمساك بك!</b><br><br>تأخرت داخل الحافلة المجهولة، أطبقت الظلال عليك وتلاشت أنفاسك في شوارع العاصمة المظلمة. لقد علقت في الحلقة الزمنية!`;
-                choicesNode.innerHTML = `<button class="choice-btn" style="text-align:center; border-color:#ef4444;" onclick="window.location.reload()">🔄 إعادة محاولة النجاة من الحافلة</button>`;
-            } else {
-                alert("🩸 خيار مرعب! الظلال تقترب ونبضات قلبك تتسارع.. الشاشة أصبحت مشوشة!");
-            }
+      },
+      {
+        id: "admin",
+        title: "الإدارة وشؤون الطلبة",
+        icon: "🏛️",
+        desc: "غرفة المحفوظات والملفات",
+        info: [
+          { subtitle: "الوثائق المطلوبة", content: "شهادة التسجيل، بطاقة الطالب، والوثائق الخاصة بإعادة إعادة التسجيل والتبرئة." },
+          { subtitle: "مكتب مصلحة الدراسة", content: "يتكفل بمتابعة الغيابات، العطل الأكاديمية، وتسليم كشوف النقاط." }
+        ],
+        quiz: {
+          q: "ما هي الجهة المسؤولة عن تسليم كشوف النقاط؟",
+          options: ["المكتبة", "مصلحة شؤون الطلبة", "المطعم الجامعي"],
+          correct: 1
         }
+      },
+      {
+        id: "profs",
+        title: "الأساتذة والمكاتب",
+        icon: "👥",
+        desc: "ممر الظلال والساعات المكتبية",
+        info: [
+          { subtitle: "التخصصات والهيئة التدريسية", content: "تضم نخبة من الأساتذة في مجالات الهياكل، الطرق، الجسور، وميكانيكا التربة." },
+          { subtitle: "الساعات المكتبية", content: "يمكن التواصل مع الأساتذة عبر إيميلاتهم الرسمية أو زيارة مكاتبهم خلال الساعات المحددة." }
+        ],
+        quiz: {
+          q: "كيف يمكنك حجز موعد مع الأستاذ؟",
+          options: ["عبر البريد الإلكتروني الرسمي والساعات المكتبية", "عبر مواقع التواصل", "بدون موعد في أي وقت"],
+          correct: 0
+        }
+      },
+      {
+        id: "schedule",
+        title: "استعمال الزمن",
+        icon: "⏳",
+        desc: "برج الساعة والجدول الأسبوعي",
+        info: [
+          { subtitle: "توزيع الحصص", content: "تنقسم الحصص بين المحاضرات العامة (Cours) والتطبيقات الموجهة (TD) والتطبيقات التطبيقية (TP)." },
+          { subtitle: "نظام الحضور", content: "النيابة البيدغوجية تطبق قانون صارم بشأن الحضور في الـ TD والـ TP (3 غيابات تؤدي للإقصاء)." }
+        ],
+        quiz: {
+          q: "كم عدد الغيابات غير المبررة التي تؤدي للإقصاء في المادة؟",
+          options: ["5 غيابات", "3 غيابات", "10 غيابات"],
+          correct: 1
+        }
+      },
+      {
+        id: "exams",
+        title: "الفروض والاختبارات",
+        icon: "📝",
+        desc: "غرفة التقييم والامتحانات",
+        info: [
+          { subtitle: "حساب المعدل", content: "يتم حساب معدل المادة بناءً على امتحان السداسي + علامات الـ TD/TP والإنضباط." },
+          { subtitle: "الامتحانات الاستدراكية", content: "تُنظم دورة استدراكية للطلبة الذين لم يحققوا معدل النجاح في السداسي." }
+        ],
+        quiz: {
+          q: "كيف يتم تقييم التطبيقات الموجهة TD؟",
+          options: ["الاختبارات القصيرة (Interros) والواجبات", "الحضور فقط", "لا توجد علامة"],
+          correct: 0
+        }
+      },
+      {
+        id: "transport",
+        title: "النقل الجامعي",
+        icon: "🚌",
+        desc: "محطة حافلات CUSTU",
+        info: [
+          { subtitle: "خطوط الحافلات", content: "تتوفر حافلات النقل الجامعي لنقل الطلبة نحو المقرات والإقامات الجامعية المختلفة." },
+          { subtitle: "شبكة المترو", content: "محطة المترو القريبة تتيح تنقلاً سريعاً نحو وسط العاصمة والمناطق المجاورة." }
+        ],
+        quiz: {
+          q: "ما هي الوسيلة الأكثر استخداماً للنقل للطلبة المقيمين؟",
+          options: ["حافلات النقل الجامعي (CUSTU) والمترو", "الطيران", "السيارات الخاصة فقط"],
+          correct: 0
+        }
+      },
+      {
+        id: "residence",
+        title: "الإقامة والإطعام",
+        icon: "🏢",
+        desc: "الملحق السكني 13",
+        info: [
+          { subtitle: "السكن الجامعي", content: "توفير الغرف المجهزة للطلبة القادمين من الولايت البعيدة وفق الشروط." },
+          { subtitle: "المطعم الجامعي", content: "تقديم الوجبات الأساسية (الغداء والعشاء) ببطاقة الطالب الجامعية." }
+        ],
+        quiz: {
+          q: "ما هو الشرط الأساسي لدخول المطعم الجامعي؟",
+          options: ["إظهار بطاقة الطالب الجامعية", "جواز السفر", "بدون أي وثيقة"],
+          correct: 0
+        }
+      },
+      {
+        id: "sports",
+        title: "الرياضة والملاعب",
+        icon: "⚽",
+        desc: "الملعب المهجور والأنشطة",
+        info: [
+          { subtitle: "المركّب الرياضي", content: "يحتوي على ملاعب لكرة القدم، كرة السلة، والقاعات الرياضية المتعددة." },
+          { subtitle: "الدوريات الطلابية", content: "تُنظم المدرسة دوريات كروية بين الدفعات والتخصصات طوال السنة الدراسية." }
+        ],
+        quiz: {
+          q: "هل توفر المدرسة دوريات رياضية للطلبة؟",
+          options: ["نعم، دوريات بين الدفعات والتخصصات", "لا توجد أي أنشطة", "للأساتذة فقط"],
+          correct: 0
+        }
+      },
+      {
+        id: "tourism",
+        title: "السياحة والجوار",
+        icon: "🌲",
+        desc: "الاستكشاف خارج الأسوار",
+        info: [
+          { subtitle: "معالم قريبة", content: "حديقة الحامة التجاربية ومقام الشهيد يقعان على مسافة قصيرة من القبة." },
+          { subtitle: "الملاذات الترفيهية", content: "المراكز التجارية والمقاهي المجاورة تتيح مكاناً للاستراحة بعد ساعات الدراسة." }
+        ],
+        quiz: {
+          q: "ما هي الحديقة الشهيرة القريبة من منطقة القبة؟",
+          options: ["حديقة التجارب بالحامة", "حديقة التسلية ببن عكنون", "حديقة بلوزداد"],
+          correct: 0
+        }
+      },
+      {
+        id: "shops",
+        title: "المحلات والتسوق",
+        icon: "📐",
+        desc: "المتجر المنسي والأدوات",
+        info: [
+          { subtitle: "أدوات الرسم الهندسي", content: "شراء مساطر T، ورق المليمتر، والأقلام التقنية المخصصة للرسم الميكانيكي والهندسي." },
+          { subtitle: "مراكز الطباعة", content: "مكتبات سريعة قريبة لطباعة الدروس (Polycopies) والبحوث." }
+        ],
+        quiz: {
+          q: "ما هي الأداة الأساسية للرسم الهندسي في السنة الأولى؟",
+          options: ["مسطرة T والأقلام التقنية", "الألوان الزيتية", "الفرشاة"],
+          correct: 0
+        }
+      }
+    ];
+
+    // State Variables
+    let playerScore = parseInt(localStorage.getItem('enstp_score') || '0');
+    let playerName = localStorage.getItem('enstp_player') || 'طالب جديد';
+    let solvedQuizzes = JSON.parse(localStorage.getItem('enstp_solved') || '[]');
+
+    // Leaderboard Data
+    let leaderboardData = [
+      { name: "أمِين (مهندس الطرق)", score: 100 },
+      { name: "سَارة (تخصص جسور)", score: 80 },
+      { name: "يَاسين (منشآت فنية)", score: 60 }
+    ];
+
+    // Render Map Zones
+    function renderZones() {
+      const container = document.getElementById('zones-container');
+      container.innerHTML = '';
+      zonesData.forEach(zone => {
+        const isSolved = solvedQuizzes.includes(zone.id);
+        const card = document.createElement('div');
+        card.className = 'zone-card';
+        card.onclick = () => openModal(zone);
+        card.innerHTML = `
+          <span class="zone-icon">${zone.icon}</span>
+          <div class="zone-title">${zone.title}</div>
+          <div class="zone-desc">${zone.desc}</div>
+          ${isSolved ? '<span style="color:var(--accent-gold); font-size:0.8rem; margin-top:5px; display:block;">✔ تم النجاح</span>' : ''}
+        `;
+        container.appendChild(card);
+      });
     }
 
-    function goToStage2() {
-        alert("المرحلة الأولى اكتملت! سيتم الانتقال برمجياً إلى مكتب مدير الدراسات والمجلس التأديبي.");
-    }
-</script>
+    // Render Leaderboard
+    function renderLeaderboard() {
+      const list = document.getElementById('leaderboard');
+      list.innerHTML = '';
 
+      // Merge current player into leaderboard
+      let fullList = [...leaderboardData, { name: playerName, score: playerScore }];
+      fullList.sort((a, b) => b.score - a.score);
+
+      fullList.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'leaderboard-item';
+        li.innerHTML = `
+          <span><span class="rank">${index + 1}.</span> ${item.name}</span>
+          <span style="color:var(--accent-gold)">${item.score} XP</span>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    // Player Stats Updates
+    function updatePlayerName(val) {
+      playerName = val || 'طالب جديد';
+      localStorage.setItem('enstp_player', playerName);
+      renderLeaderboard();
+    }
+
+    function addScore(points) {
+      playerScore += points;
+      document.getElementById('player-score').innerText = playerScore;
+      localStorage.setItem('enstp_score', playerScore);
+      renderLeaderboard();
+    }
+
+    // Modal Control
+    function openModal(zone) {
+      playScareSound();
+      document.getElementById('modal-title').innerText = zone.title;
+      
+      const infoContainer = document.getElementById('modal-info');
+      infoContainer.innerHTML = '';
+      zone.info.forEach(item => {
+        infoContainer.innerHTML += `
+          <div class="info-section">
+            <h4>${item.subtitle}</h4>
+            <p>${item.content}</p>
+          </div>
+        `;
+      });
+
+      const quizContainer = document.getElementById('modal-quiz');
+      if (solvedQuizzes.includes(zone.id)) {
+        quizContainer.innerHTML = `<p style="color:var(--accent-gold); text-align:center;">✨ لقد نجحت في فك شفرة هذا القسم بنجاح!</p>`;
+      } else {
+        quizContainer.innerHTML = `
+          <h4>⚠️ لغز البقاء (اختبار المعلومات):</h4>
+          <p style="margin-bottom:10px;">${zone.quiz.q}</p>
+          ${zone.quiz.options.map((opt, idx) => `
+            <button class="quiz-option" onclick="checkAnswer('${zone.id}', ${idx}, ${zone.quiz.correct})">${opt}</button>
+          `).join('')}
+        `;
+      }
+
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    function checkAnswer(zoneId, selected, correct) {
+      if (selected === correct) {
+        alert("🎉 إجابة صحيحة! تم كسب +10 نقاط معرفية.");
+        solvedQuizzes.push(zoneId);
+        localStorage.setItem('enstp_solved', JSON.stringify(solvedQuizzes));
+        addScore(10);
+        renderZones();
+        closeModal();
+      } else {
+        playScareSound();
+        alert("❌ إجابة خاطئة! احذر من ظلال المدرسة...");
+      }
+    }
+
+    // Canvas Fog Animation Effect
+    const canvas = document.getElementById('fog-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 80 + 40,
+        alpha: Math.random() * 0.2 + 0.05,
+        speedX: Math.random() * 0.6 - 0.3,
+        speedY: Math.random() * 0.4 - 0.2
+      });
+    }
+
+    function animateFog() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        grad.addColorStop(0, `rgba(230, 57, 70, ${p.alpha})`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grad;
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animateFog);
+    }
+    animateFog();
+
+    // Initial Launch Setup
+    document.getElementById('player-name').value = playerName;
+    document.getElementById('player-score').innerText = playerScore;
+    renderZones();
+    renderLeaderboard();
+  </script>
 </body>
 </html>

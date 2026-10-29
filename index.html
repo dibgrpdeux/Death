@@ -11,13 +11,13 @@
   <style>
     :root {
       --bg-dark: #050505;
-      --panel-bg: rgba(15, 18, 22, 0.92);
+      --panel-bg: rgba(15, 18, 22, 0.95);
       --red-glow: #e63946;
       --red-dim: #7a121c;
       --accent-gold: #d4af37;
       --text-light: #e0e6ed;
       --text-muted: #94a3b8;
-      --border-color: rgba(230, 57, 70, 0.3);
+      --border-color: rgba(230, 57, 70, 0.35);
     }
 
     * {
@@ -58,8 +58,8 @@
       z-index: 2;
       pointer-events: none;
       background: 
-        radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.85) 100%),
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+        radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.9) 100%),
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%);
       background-size: 100% 100%, 100% 4px;
     }
 
@@ -78,14 +78,14 @@
       padding: 30px 10px;
       border-bottom: 2px solid var(--border-color);
       margin-bottom: 30px;
-      background: radial-gradient(ellipse at center, rgba(122, 18, 28, 0.2) 0%, transparent 70%);
+      background: radial-gradient(ellipse at center, rgba(122, 18, 28, 0.3) 0%, transparent 70%);
     }
 
     header h1 {
       font-family: 'Amiri', serif;
       font-size: 3.2rem;
       color: var(--red-glow);
-      text-shadow: 0 0 15px rgba(230, 57, 70, 0.6), 2px 2px 0px #000;
+      text-shadow: 0 0 15px rgba(230, 57, 70, 0.7), 2px 2px 0px #000;
       letter-spacing: 1px;
     }
 
@@ -188,7 +188,7 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at center, rgba(230, 57, 70, 0.15), transparent);
+      background: radial-gradient(circle at center, rgba(230, 57, 70, 0.2), transparent);
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -196,7 +196,7 @@
     .zone-card:hover {
       border-color: var(--red-glow);
       transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 10px 25px rgba(230, 57, 70, 0.25);
+      box-shadow: 0 10px 25px rgba(230, 57, 70, 0.3);
     }
 
     .zone-card:hover::before {
@@ -270,7 +270,7 @@
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.92);
       z-index: 100;
       display: none;
       justify-content: center;
@@ -287,12 +287,12 @@
       border: 2px solid var(--red-glow);
       width: 100%;
       max-width: 750px;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
       border-radius: 12px;
       padding: 30px;
       position: relative;
-      box-shadow: 0 0 40px rgba(230, 57, 70, 0.4);
+      box-shadow: 0 0 45px rgba(230, 57, 70, 0.5);
     }
 
     .close-modal {
@@ -304,10 +304,28 @@
       color: var(--text-muted);
       font-size: 2rem;
       cursor: pointer;
+      z-index: 5;
     }
 
     .close-modal:hover {
       color: var(--red-glow);
+    }
+
+    /* Horror Image Banner Inside Modal */
+    .modal-horror-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--red-dim);
+      margin-bottom: 20px;
+      filter: grayscale(40%) contrast(120%) brightness(80%);
+      box-shadow: inset 0 0 20px #000;
+      transition: filter 0.3s;
+    }
+
+    .modal-horror-img:hover {
+      filter: grayscale(0%) contrast(130%) brightness(95%);
     }
 
     .modal-header {
@@ -333,7 +351,7 @@
 
     .quiz-container {
       margin-top: 25px;
-      background: rgba(122, 18, 28, 0.15);
+      background: rgba(122, 18, 28, 0.18);
       border: 1px dashed var(--red-glow);
       padding: 20px;
       border-radius: 8px;
@@ -394,6 +412,7 @@
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <button class="close-modal" onclick="closeModal()">&times;</button>
+      <img id="modal-img" class="modal-horror-img" src="" alt="Horror Scene">
       <h2 class="modal-header" id="modal-title">عنوان القطاع</h2>
       <div id="modal-info"></div>
       <div class="quiz-container" id="modal-quiz"></div>
@@ -421,9 +440,8 @@
         droneOsc = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
         droneOsc.type = 'sawtooth';
-        droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // Low creepy hum (A1)
+        droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // Low creepy hum
         
-        // Lowpass filter for deep dark sound
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(200, audioCtx.currentTime);
@@ -454,12 +472,13 @@
       osc.stop(audioCtx.currentTime + 0.4);
     }
 
-    // Interactive Data - 10 ENSTP Sectors
+    // Data - 10 ENSTP Sectors with Scary Cinematic Visuals
     const zonesData = [
       {
         id: "map",
         title: "الخريطة والموقع",
         icon: "🗺️",
+        img: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=800&q=80",
         desc: "استكشف المباني بالقبة",
         info: [
           { subtitle: "الموقع الجغرافي", content: "تقع المدرسة الوطنية العليا لأشغال العمومية بمدينة القبة، الجزائر العاصمة." },
@@ -475,9 +494,10 @@
         id: "admin",
         title: "الإدارة وشؤون الطلبة",
         icon: "🏛️",
+        img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
         desc: "غرفة المحفوظات والملفات",
         info: [
-          { subtitle: "الوثائق المطلوبة", content: "شهادة التسجيل، بطاقة الطالب، والوثائق الخاصة بإعادة إعادة التسجيل والتبرئة." },
+          { subtitle: "الوثائق المطلوبة", content: "شهادة التسجيل، بطاقة الطالب، والوثائق الخاصة بإعادة التسجيل والتبرئة." },
           { subtitle: "مكتب مصلحة الدراسة", content: "يتكفل بمتابعة الغيابات، العطل الأكاديمية، وتسليم كشوف النقاط." }
         ],
         quiz: {
@@ -490,6 +510,7 @@
         id: "profs",
         title: "الأساتذة والمكاتب",
         icon: "👥",
+        img: "https://images.unsplash.com/photo-1500462825327-021b38e072a2?auto=format&fit=crop&w=800&q=80",
         desc: "ممر الظلال والساعات المكتبية",
         info: [
           { subtitle: "التخصصات والهيئة التدريسية", content: "تضم نخبة من الأساتذة في مجالات الهياكل، الطرق، الجسور، وميكانيكا التربة." },
@@ -505,6 +526,7 @@
         id: "schedule",
         title: "استعمال الزمن",
         icon: "⏳",
+        img: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=800&q=80",
         desc: "برج الساعة والجدول الأسبوعي",
         info: [
           { subtitle: "توزيع الحصص", content: "تنقسم الحصص بين المحاضرات العامة (Cours) والتطبيقات الموجهة (TD) والتطبيقات التطبيقية (TP)." },
@@ -520,6 +542,7 @@
         id: "exams",
         title: "الفروض والاختبارات",
         icon: "📝",
+        img: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?auto=format&fit=crop&w=800&q=80",
         desc: "غرفة التقييم والامتحانات",
         info: [
           { subtitle: "حساب المعدل", content: "يتم حساب معدل المادة بناءً على امتحان السداسي + علامات الـ TD/TP والإنضباط." },
@@ -535,6 +558,7 @@
         id: "transport",
         title: "النقل الجامعي",
         icon: "🚌",
+        img: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80",
         desc: "محطة حافلات CUSTU",
         info: [
           { subtitle: "خطوط الحافلات", content: "تتوفر حافلات النقل الجامعي لنقل الطلبة نحو المقرات والإقامات الجامعية المختلفة." },
@@ -550,9 +574,10 @@
         id: "residence",
         title: "الإقامة والإطعام",
         icon: "🏢",
+        img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80",
         desc: "الملحق السكني 13",
         info: [
-          { subtitle: "السكن الجامعي", content: "توفير الغرف المجهزة للطلبة القادمين من الولايت البعيدة وفق الشروط." },
+          { subtitle: "السكن الجامعي", content: "توفير الغرف المجهزة للطلبة القادمين من الولايات البعيدة وفق الشروط." },
           { subtitle: "المطعم الجامعي", content: "تقديم الوجبات الأساسية (الغداء والعشاء) ببطاقة الطالب الجامعية." }
         ],
         quiz: {
@@ -565,6 +590,7 @@
         id: "sports",
         title: "الرياضة والملاعب",
         icon: "⚽",
+        img: "https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=800&q=80",
         desc: "الملعب المهجور والأنشطة",
         info: [
           { subtitle: "المركّب الرياضي", content: "يحتوي على ملاعب لكرة القدم، كرة السلة، والقاعات الرياضية المتعددة." },
@@ -580,9 +606,10 @@
         id: "tourism",
         title: "السياحة والجوار",
         icon: "🌲",
+        img: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80",
         desc: "الاستكشاف خارج الأسوار",
         info: [
-          { subtitle: "معالم قريبة", content: "حديقة الحامة التجاربية ومقام الشهيد يقعان على مسافة قصيرة من القبة." },
+          { subtitle: "معالم قريبة", content: "حديقة الحامة التجارية ومقام الشهيد يقعان على مسافة قصيرة من القبة." },
           { subtitle: "الملاذات الترفيهية", content: "المراكز التجارية والمقاهي المجاورة تتيح مكاناً للاستراحة بعد ساعات الدراسة." }
         ],
         quiz: {
@@ -595,6 +622,7 @@
         id: "shops",
         title: "المحلات والتسوق",
         icon: "📐",
+        img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
         desc: "المتجر المنسي والأدوات",
         info: [
           { subtitle: "أدوات الرسم الهندسي", content: "شراء مساطر T، ورق المليمتر، والأقلام التقنية المخصصة للرسم الميكانيكي والهندسي." },
@@ -644,7 +672,6 @@
       const list = document.getElementById('leaderboard');
       list.innerHTML = '';
 
-      // Merge current player into leaderboard
       let fullList = [...leaderboardData, { name: playerName, score: playerScore }];
       fullList.sort((a, b) => b.score - a.score);
 
@@ -677,6 +704,7 @@
     function openModal(zone) {
       playScareSound();
       document.getElementById('modal-title').innerText = zone.title;
+      document.getElementById('modal-img').src = zone.img;
       
       const infoContainer = document.getElementById('modal-info');
       infoContainer.innerHTML = '';

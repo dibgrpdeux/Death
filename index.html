@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صدى الخرسانة: الاستدعاء - دليل طالب ENSTP</title>
+  <title>صدى الخرسانة: توبيخ الأستاذ المرعب - دليل ENSTP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
@@ -37,17 +37,27 @@
       position: relative;
     }
 
-    /* Fog Canvas Background */
-    #fog-canvas {
+    body.scared-flash {
+      animation: redFlash 0.5s ease;
+    }
+
+    @keyframes redFlash {
+      0% { background-color: #ff2a3a; }
+      100% { background-color: var(--bg-dark); }
+    }
+
+    /* Fog Canvas & Ghost Canvas Backgrounds */
+    #fog-canvas, #ghost-canvas {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
       z-index: 1;
       pointer-events: none;
-      opacity: 0.6;
     }
 
-    /* Screen Overlay Vignette & Glitch */
+    #ghost-canvas { z-index: 3; }
+
+    /* Vignette & Screen Overlay */
     .screen-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -60,7 +70,7 @@
       background-size: 100% 100%, 100% 4px;
     }
 
-    /* Entry Intro Modal */
+    /* Initial Entry Intro Screen */
     .intro-screen {
       position: fixed;
       top: 0; left: 0;
@@ -76,18 +86,18 @@
     }
 
     .intro-box {
-      background: rgba(20, 5, 8, 0.9);
+      background: rgba(20, 5, 8, 0.95);
       border: 2px solid var(--red-glow);
       padding: 40px;
       border-radius: 12px;
-      max-width: 500px;
+      max-width: 520px;
       box-shadow: 0 0 50px rgba(255, 42, 58, 0.5);
     }
 
     .intro-box h1 {
       font-family: 'Amiri', serif;
       color: var(--red-glow);
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       margin-bottom: 10px;
     }
 
@@ -122,7 +132,7 @@
       transform: scale(1.05);
     }
 
-    /* Main Perspective View (3D/POV Simulation) */
+    /* Perspective POV Scene */
     .pov-container {
       position: absolute;
       top: 0; left: 0;
@@ -134,7 +144,6 @@
       overflow: hidden;
     }
 
-    /* Background Haunted Courtyard */
     .courtyard-bg {
       position: absolute;
       width: 110%; height: 110%;
@@ -143,11 +152,10 @@
       transition: transform 0.1s ease-out;
     }
 
-    /* Big Wanted Billboard with Student Info */
     .billboard {
       position: absolute;
       top: 15%;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       border: 3px double var(--red-glow);
       padding: 20px 40px;
       text-align: center;
@@ -156,32 +164,10 @@
       animation: flicker 3s infinite alternate;
     }
 
-    .billboard h3 {
-      color: var(--accent-gold);
-      font-size: 1.2rem;
-    }
+    .billboard h3 { color: var(--accent-gold); font-size: 1.1rem; }
+    .billboard h2 { color: var(--red-glow); font-size: 2.2rem; font-family: 'Amiri', serif; }
 
-    .billboard h2 {
-      color: var(--red-glow);
-      font-size: 2.2rem;
-      font-family: 'Amiri', serif;
-    }
-
-    /* Advancing Entity/Shadow Figure */
-    .advancing-entity {
-      position: absolute;
-      bottom: 5%;
-      width: 320px;
-      height: 480px;
-      background: url('https://images.unsplash.com/photo-1500462825327-021b38e072a2?auto=format&fit=crop&w=800&q=80') center/contain no-repeat;
-      filter: drop-shadow(0 0 25px #ff2a3a) grayscale(100%) contrast(200%);
-      transform-origin: bottom center;
-      transform: scale(0.3);
-      opacity: 0.8;
-      transition: transform 0.2s linear, filter 0.2s;
-    }
-
-    /* HUD Dashboard Overlay */
+    /* HUD Dashboard Header */
     .hud-header {
       position: fixed;
       top: 15px; left: 20px; right: 20px;
@@ -195,16 +181,20 @@
       border-radius: 8px;
     }
 
-    .radar-box {
+    .timer-display {
       color: var(--red-glow);
-      font-weight: bold;
-      font-size: 1.2rem;
+      font-weight: 900;
+      font-size: 1.3rem;
+      background: rgba(255, 42, 58, 0.1);
+      border: 1px solid var(--red-glow);
+      padding: 4px 15px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    /* Map Zones Floating Grid at Bottom */
+    /* HUD Zones Grid at Bottom */
     .hud-zones {
       position: fixed;
       bottom: 20px; left: 50%;
@@ -236,7 +226,7 @@
       transform: translateY(-3px);
     }
 
-    /* Modal Display */
+    /* Choice Step Modal Window */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -248,9 +238,7 @@
       padding: 20px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-content {
       background: #0f1216;
@@ -275,14 +263,34 @@
 
     .close-modal:hover { color: var(--red-glow); }
 
-    .quiz-option {
-      display: block; width: 100%; text-align: right;
-      background: #181d24; border: 1px solid rgba(255,255,255,0.1);
-      color: white; padding: 12px 15px; margin: 10px 0;
-      border-radius: 4px; cursor: pointer;
+    .choice-step-title {
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 5px;
     }
 
-    .quiz-option:hover { background: var(--red-dim); }
+    .step-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: var(--text-light);
+    }
+
+    .choice-btn {
+      display: block; width: 100%; text-align: right;
+      background: #181d24; border: 1px solid rgba(255,255,255,0.1);
+      color: white; padding: 14px 18px; margin: 10px 0;
+      border-radius: 6px; cursor: pointer; font-family: 'Cairo', sans-serif;
+      transition: all 0.2s ease;
+    }
+
+    .choice-btn:hover {
+      background: var(--red-dim);
+      border-color: var(--red-glow);
+      transform: translateX(-5px);
+    }
 
     @keyframes flicker {
       0%, 100% { opacity: 1; }
@@ -292,28 +300,29 @@
 </head>
 <body>
 
-  <!-- Entry Name Prompt -->
+  <!-- Entry Intro Screen -->
   <div class="intro-screen" id="intro-screen">
     <div class="intro-box">
       <h1>صدى الخرسانة</h1>
-      <p>أدخل بياناتك لدخول الساحة وحل ألغاز دليل ENSTP</p>
+      <p>أدخل اسمك لبدء التجربة وسماع صوت الأستاذ المرعب عند اتخاذ الخيارات الخاطئة!</p>
       <input type="text" id="input-student-name" placeholder="أدخل اسمك الكامل..." value="طالب جديد">
-      <button class="btn-danger" onclick="startExperience()">تأكيد الاستدعاء لبدء اللعبة 👁️</button>
+      <button class="btn-danger" onclick="startExperience()">دخول الساحة ومواجهة الأستاذ 👁️</button>
     </div>
   </div>
 
   <canvas id="fog-canvas"></canvas>
+  <canvas id="ghost-canvas"></canvas>
   <div class="screen-overlay"></div>
 
-  <!-- HUD Control Bar -->
+  <!-- HUD Control Header -->
   <div class="hud-header">
     <div>
-      <span style="color:var(--text-muted)">الضحية:</span>
+      <span style="color:var(--text-muted)">المستكشف:</span>
       <b id="hud-name" style="color:var(--accent-gold)">طالب جديد</b>
     </div>
 
-    <div class="radar-box">
-      ⚠️ اقتراب الجموع: <span id="distance-display">100m</span>
+    <div class="timer-display">
+      ⏳ الوقت المتبقي: <span id="time-left">60</span>s
     </div>
 
     <div>
@@ -321,41 +330,48 @@
     </div>
   </div>
 
-  <!-- 3D POV World Scene -->
-  <div class="pov-container" id="pov-scene">
+  <!-- Perspective Courtyard Scene -->
+  <div class="pov-container">
     <div class="courtyard-bg" id="courtyard"></div>
 
-    <!-- Wanted Board with Student Info -->
     <div class="billboard">
-      <h3>⚠️ الضحية القادمة في ساحة ENSTP ⚠️</h3>
+      <h3>⚠️ الملاذ الأخير للطالب ⚠️</h3>
       <h2 id="billboard-name">طالب جديد</h2>
-      <p style="color:var(--text-muted)">التخصص: الهندسة المدنية والأشغال العمومية</p>
+      <p style="color:var(--text-muted)">المدرسة الوطنية العليا لأشغال العمومية</p>
     </div>
-
-    <!-- Advancing Entity Figure -->
-    <div class="advancing-entity" id="entity-figure"></div>
   </div>
 
-  <!-- Bottom Interactive Guide Zones -->
+  <!-- HUD Bottom Zones List -->
   <div class="hud-zones" id="hud-zones-list"></div>
 
-  <!-- Challenge Modal -->
+  <!-- Choice Modal Window -->
   <div class="modal-overlay" id="modal">
     <div class="modal-content">
       <button class="close-modal" onclick="closeModal()">&times;</button>
       <h2 style="color:var(--red-glow); margin-bottom:15px;" id="modal-title">عنوان القطاع</h2>
-      <div id="modal-info"></div>
-      <div style="margin-top:20px; background:rgba(122,18,28,0.2); padding:15px; border:1px dashed var(--red-glow); border-radius:6px;" id="modal-quiz"></div>
+      <div class="choice-step-title" id="choice-step-num">المرحلة 1 من الخيارات</div>
+      <div class="step-text" id="choice-step-text">تفاصيل الموقف والخيارات...</div>
+      <div id="choice-options-container"></div>
     </div>
   </div>
 
   <script>
-    // Audio Context Setup
+    // Audio Context & Speech Synth Setup
     let audioCtx = null;
-    let isAudioPlaying = false;
-
     function initAudio() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    // Function to speak creepily in Arabic using Web Speech API
+    function speakProfessorCreepy(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop any previous speech
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ar-SA';
+        utterance.pitch = 0.3; // Low creepy deep voice pitch
+        utterance.rate = 0.85;  // Slow authoritative speed
+        window.speechSynthesis.speak(utterance);
+      }
     }
 
     function playScareSound() {
@@ -363,34 +379,115 @@
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.5);
-      gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
       osc.connect(gain);
       gain.connect(audioCtx.destination);
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.5);
+      osc.stop(audioCtx.currentTime + 0.4);
     }
 
     // State Variables
     let playerName = "طالب جديد";
     let playerScore = 0;
-    let distance = 100;
-    let entityScale = 0.3;
-    let gameLoopInterval = null;
-    let solvedQuizzes = [];
+    let timeLeft = 60;
+    let timerInterval = null;
+    let currentZone = null;
+    let currentStepIndex = 0;
+    let solvedZones = [];
 
-    // ENSTP Guide Data
-    const zonesData = [
-      { id: "map", title: "🗺️ الخريطة", info: "تقع المدرسة بمدينة القبة، العاصمة.", q: "أين تقع المدرسة الوطنية العليا لأشغال العمومية؟", options: ["القبة", "باب الزوار", "الحراش"], correct: 0 },
-      { id: "admin", title: "🏛️ الإدارة", info: "مصلحة الدراسات تتكفل بالتسجيلات وكشوف النقاط.", q: "من يسلم كشوف النقاط؟", options: ["المكتبة", "مصلحة شؤون الطلبة", "المطعم"], correct: 1 },
-      { id: "profs", title: "👥 الأساتذة", info: "تواصل مع الأساتذة عبر إيميلاتهم والساعات المكتبية.", q: "كيف تحجز موعداً مع الأستاذ؟", options: ["عبر البريد الرسمى والساعات المكتبية", "في الشارع", "بدون موعد"], correct: 0 },
-      { id: "schedule", title: "⏳ الجدول", info: "3 غيابات غير مبررة في TD/TP تؤدي للإقصاء.", q: "كم غياباً يسبب الإقصاء؟", options: ["5 غيابات", "3 غيابات", "10 غيابات"], correct: 1 },
-      { id: "exams", title: "📝 الامتحانات", info: "يتم تقييم المادة بناءً على الامتحان والـ TD.", q: "كيف يُقيّم قسم الـ TD؟", options: ["اختبارات قصيرة وواجبات", "حضور فقط", "بدون علامة"], correct: 0 },
-      { id: "transport", title: "🚌 النقل", info: "حافلات CUSTU والمترو يسهلان التنقل.", q: "ما هي وسيلة النقل الأساسية للطلبة؟", options: ["حافلات CUSTU والمترو", "الطيران", "سيارة خاصة"], correct: 0 },
-      { id: "residence", title: "🏢 الإقامة", info: "الدخول للمطعم يتطلب بطاقة الطالب.", q: "ما الشرط لدخول المطعم الجامعي؟", options: ["إظهار بطاقة الطالب", "جواز السفر", "بدون وثيقة"], correct: 0 },
-      { id: "sports", title: "⚽ الرياضة", info: "تُنظم دوريات رياضية بين التخصصات.", q: "هل توفر المدرسة دوريات رياضية؟", options: ["نعم بين التخصصات والدفعات", "لا توجد", "للأساتذة فقط"], correct: 0 }
+    // Professor Creepy Scolding Quotes
+    const scoldQuotes = [
+      `إلى أين أنت ذاهب يا ${playerName}؟! هل تظن أن ميكانيكا المواد والخرسانة لعبة في يديك؟!`,
+      `تأخرت واخترت طريقاً خاطئاً يا ${playerName}... الغياب الثالث يعني إقصاءك الأبدي من المدرسة!`,
+      `لن تتخرج من هذه المدرسة أبداً يا ${playerName}... الساحة ستكون مقبرتك الدراسية!`,
+      `ركز يا ${playerName}! الإدارة والأساتذة يراقبون كل خطوة تخطوها في ظلمات القبة!`
+    ];
+
+    // ENSTP Guide Scenarios
+    const zonesScenarios = [
+      {
+        id: "map",
+        title: "🗺️ خريطة المدرسة والموقع",
+        steps: [
+          {
+            text: "تصل إلى المدخل الرئيسي للمدرسة ليلاً والضباب يغطي معالم القبة. أي اتجاه تسلكه للوصول إلى الجناح البيدغوجي؟",
+            options: [
+              { label: "الاتجاه نحو مدرجات القبة العلوية", nextStep: 1, isCorrect: true },
+              { label: "الدخول إلى القبو المظلم تحصيناً من البرد", nextStep: -1, isCorrect: false }
+            ]
+          },
+          {
+            text: "ممتاز! أقتربت من المدرجات وتوصلت إلى الموقع الجغرافي للمدرسة. أين تقع المدرسة الوطنية العليا لأشغال العمومية بالظبط؟",
+            options: [
+              { label: "بلدية القبة - الجزائر العاصمة", nextStep: 'WIN', isCorrect: true },
+              { label: "منطقة باب الزوار", nextStep: -1, isCorrect: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "admin",
+        title: "🏛️ الإدارة وشؤون الطلبة",
+        steps: [
+          {
+            text: "تبحث عن وثيقة التسجيل الخاصة بك داخل الأرشيف الإداري. تجد بابين مغلقين بصوت آلة كاتبة.",
+            options: [
+              { label: "فتح باب مصلحة شؤون الطلبة والدراسات", nextStep: 1, isCorrect: true },
+              { label: "فتح باب المخزن الرئيسي", nextStep: -1, isCorrect: false }
+            ]
+          },
+          {
+            text: "وجدتها! من هي المصلحة المسؤولة عن متابعة غياباتك وتسليم كشف النقاط؟",
+            options: [
+              { label: "مصلحة شؤون الطلبة والنيابة البيدغوجية", nextStep: 'WIN', isCorrect: true },
+              { label: "مكتب المراجع بالمكتبة المركزية", nextStep: -1, isCorrect: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "schedule",
+        title: "⏳ استعمال الزمن والحضور",
+        steps: [
+          {
+            text: "تسمع دقات ساعة البرج المظلمة بتردد متسارع. ينبغي عليك التحقق من نظام الغيابات للحفاظ على مقعدك.",
+            options: [
+              { label: "الاطلاع على القانون الداخلي للحضور في TD وTP", nextStep: 1, isCorrect: true },
+              { label: "تجاهل الجدول ومغادرة القاعة", nextStep: -1, isCorrect: false }
+            ]
+          },
+          {
+            text: "ما هو عدد الغيابات غير المبررة التي تتسبب فوراً في إقصائك من المادة؟",
+            options: [
+              { label: "3 غيابات غير مبررة", nextStep: 'WIN', isCorrect: true },
+              { label: "10 غيابات كاملة", nextStep: -1, isCorrect: false }
+            ]
+          }
+        ]
+      },
+      {
+        id: "transport",
+        title: "🚌 النقل الجامعي",
+        steps: [
+          {
+            text: "تصل إلى المحطة المهجورة بالخارج وصوت صفير حافلة يقترب من بعيد. كيف تنقل نفسك للإقامة؟",
+            options: [
+              { label: "انتظار حافلات CUSTU الجامعية المخصصة", nextStep: 1, isCorrect: true },
+              { label: "المشي في الطرقات المظلمة ليلاً", nextStep: -1, isCorrect: false }
+            ]
+          },
+          {
+            text: "وصلت الحافلة! ما هي أسرع وسيلة نقل عامة بجانب الحافلات قريبة من القبة؟",
+            options: [
+              { label: "شبكة المترو للوصول لوسط العاصمة", nextStep: 'WIN', isCorrect: true },
+              { label: "القطار السريع العابر للولايات", nextStep: -1, isCorrect: false }
+            ]
+          }
+        ]
+      }
     ];
 
     function startExperience() {
@@ -402,96 +499,139 @@
       document.getElementById('intro-screen').style.display = 'none';
 
       playScareSound();
+      speakProfessorCreepy(`أهلاً بك يا ${playerName} في ساحة الخرسانة... لا تخطئ في إجاباتك!`);
       renderHUDZones();
 
-      // Start Entity Advancing Game Loop
-      gameLoopInterval = setInterval(advanceEntity, 1000);
+      timerInterval = setInterval(updateTimer, 1000);
     }
 
-    function advanceEntity() {
-      if (distance > 0) {
-        distance -= 2;
-        entityScale += 0.015;
-        document.getElementById('distance-display').innerText = distance + "m";
-        
-        const entity = document.getElementById('entity-figure');
-        entity.style.transform = `scale(${entityScale})`;
-        
-        // Perspective Shake Effect when close
-        if (distance < 30) {
-          document.getElementById('courtyard').style.transform = `scale(1.05) translate(${Math.random()*6-3}px, ${Math.random()*6-3}px)`;
-        }
+    function updateTimer() {
+      if (timeLeft > 0) {
+        timeLeft--;
+        document.getElementById('time-left').innerText = timeLeft;
       } else {
-        clearInterval(gameLoopInterval);
         playScareSound();
-        alert(`🚨 أحيطت بك أشباح الساحة يا ${playerName}! لم تجب بسرعة كافية على الدليل. أعد المحاولة!`);
-        resetGame();
+        const randomScold = scoldQuotes[Math.floor(Math.random() * scoldQuotes.length)];
+        speakProfessorCreepy(randomScold);
+        triggerRedFlash();
+        timeLeft = 60;
+        document.getElementById('time-left').innerText = timeLeft;
       }
     }
 
-    function resetGame() {
-      distance = 100;
-      entityScale = 0.3;
-      document.getElementById('distance-display').innerText = "100m";
-      document.getElementById('entity-figure').style.transform = "scale(0.3)";
-      gameLoopInterval = setInterval(advanceEntity, 1000);
+    function triggerRedFlash() {
+      document.body.classList.add('scared-flash');
+      setTimeout(() => document.body.classList.remove('scared-flash'), 500);
     }
 
     function renderHUDZones() {
       const list = document.getElementById('hud-zones-list');
       list.innerHTML = '';
-      zonesData.forEach(zone => {
-        const isSolved = solvedQuizzes.includes(zone.id);
+      zonesScenarios.forEach(zone => {
+        const isSolved = solvedZones.includes(zone.id);
         const btn = document.createElement('button');
         btn.className = 'hud-btn';
         btn.innerHTML = `${zone.title} ${isSolved ? '✔' : ''}`;
-        btn.onclick = () => openModal(zone);
+        btn.onclick = () => openScenarioModal(zone);
         list.appendChild(btn);
       });
     }
 
-    function openModal(zone) {
+    function openScenarioModal(zone) {
+      currentZone = zone;
+      currentStepIndex = 0;
       document.getElementById('modal-title').innerText = zone.title;
-      document.getElementById('modal-info').innerHTML = `<p>${zone.info}</p>`;
-      
-      const quizContainer = document.getElementById('modal-quiz');
-      if (solvedQuizzes.includes(zone.id)) {
-        quizContainer.innerHTML = `<p style="color:var(--accent-gold)">✨ تم فك شفرة هذا القسم بنجاح!</p>`;
-      } else {
-        quizContainer.innerHTML = `
-          <h4>⚠️ لغز النجاة (أجب لتبطئة الجموع):</h4>
-          <p style="margin-bottom:10px;">${zone.q}</p>
-          ${zone.options.map((opt, idx) => `
-            <button class="quiz-option" onclick="checkAnswer('${zone.id}', ${idx}, ${zone.correct})">${opt}</button>
-          `).join('')}
-        `;
-      }
+      renderCurrentStep();
       document.getElementById('modal').classList.add('active');
+    }
+
+    function renderCurrentStep() {
+      const step = currentZone.steps[currentStepIndex];
+      document.getElementById('choice-step-num').innerText = `المرحلة ${currentStepIndex + 1} من الخيارات`;
+      document.getElementById('choice-step-text').innerText = step.text;
+
+      const container = document.getElementById('choice-options-container');
+      container.innerHTML = '';
+
+      step.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = opt.label;
+        btn.onclick = () => makeChoice(opt);
+        container.appendChild(btn);
+      });
+    }
+
+    function makeChoice(option) {
+      if (!option.isCorrect) {
+        playScareSound();
+        triggerRedFlash();
+        const randomScold = scoldQuotes[Math.floor(Math.random() * scoldQuotes.length)];
+        speakProfessorCreepy(randomScold); // Professor speaks Creepy Voice
+        timeLeft = Math.max(0, timeLeft - 10);
+        closeModal();
+      } else {
+        if (option.nextStep === 'WIN') {
+          playScareSound();
+          speakProfessorCreepy(`ممتاز يا ${playerName}! استطعت الإجابة بشكل صحيح وتفادي العقاب هذه المرة.`);
+          solvedZones.push(currentZone.id);
+          playerScore += 20;
+          timeLeft += 15;
+          document.getElementById('hud-score').innerText = playerScore;
+          renderHUDZones();
+          closeModal();
+        } else {
+          currentStepIndex = option.nextStep;
+          renderCurrentStep();
+        }
+      }
     }
 
     function closeModal() {
       document.getElementById('modal').classList.remove('active');
     }
 
-    function checkAnswer(zoneId, selected, correct) {
-      if (selected === correct) {
-        alert("🎉 إجابة صحيحة! تم دحر الجموع للخلف بكسب +20 متراً!");
-        solvedQuizzes.push(zoneId);
-        playerScore += 10;
-        distance = Math.min(100, distance + 20);
-        entityScale = Math.max(0.3, entityScale - 0.15);
-        document.getElementById('hud-score').innerText = playerScore;
-        renderHUDZones();
-        closeModal();
-      } else {
-        playScareSound();
-        distance = Math.max(0, distance - 15);
-        alert("❌ إجابة خاطئة! الجموع تتقدم فوراً بمقدار -15 متراً!");
-        closeModal();
-      }
+    // Animated Ghosts Canvas
+    const gCanvas = document.getElementById('ghost-canvas');
+    const gCtx = gCanvas.getContext('2d');
+    let ghosts = [];
+
+    function resizeGCanvas() {
+      gCanvas.width = window.innerWidth;
+      gCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeGCanvas);
+    resizeGCanvas();
+
+    for (let i = 0; i < 5; i++) {
+      ghosts.push({
+        x: Math.random() * gCanvas.width,
+        y: Math.random() * gCanvas.height,
+        size: Math.random() * 40 + 60,
+        speed: Math.random() * 1 + 0.5,
+        alpha: Math.random() * 0.4 + 0.2
+      });
     }
 
-    // Canvas Fog Animation Effect
+    function animateGhosts() {
+      gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+      ghosts.forEach(g => {
+        g.y -= g.speed;
+        if (g.y < -100) g.y = gCanvas.height + 100;
+
+        gCtx.save();
+        gCtx.globalAlpha = g.alpha;
+        gCtx.fillStyle = '#ff2a3a';
+        gCtx.beginPath();
+        gCtx.arc(g.x, g.y, g.size, 0, Math.PI * 2);
+        gCtx.fill();
+        gCtx.restore();
+      });
+      requestAnimationFrame(animateGhosts);
+    }
+    animateGhosts();
+
+    // Fog Animation Canvas
     const canvas = document.getElementById('fog-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -503,7 +643,7 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    for (let i = 0; i < 35; i++) {
+    for (let i = 0; i < 30; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -537,3 +677,4 @@
   </script>
 </body>
 </html>
+

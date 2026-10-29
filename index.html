@@ -1,679 +1,503 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>صدى الخرسانة: توبيخ الأستاذ المرعب - دليل ENSTP</title>
+  <title>ENSTP - بوابة الطالب الرقمية</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&family=Creepster&display=swap" rel="stylesheet">
   
   <style>
+    /* ==================================================
+       NORMAL THEME (The Bait)
+       ================================================== */
     :root {
-      --bg-dark: #030303;
-      --panel-bg: rgba(10, 12, 16, 0.95);
-      --red-glow: #ff2a3a;
-      --red-dim: #7a121c;
-      --accent-gold: #d4af37;
-      --text-light: #e0e6ed;
-      --text-muted: #94a3b8;
-      --border-color: rgba(255, 42, 58, 0.4);
+      --primary-blue: #004b87;
+      --light-bg: #f4f7f6;
+      --text-dark: #333;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-light);
       font-family: 'Cairo', sans-serif;
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
+      overflow-x: hidden;
+      background-color: var(--light-bg);
+      transition: background-color 0.1s;
+    }
+
+    #normal-site {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffffff, #e2ebf0);
+    }
+
+    .official-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .official-header h1 {
+      color: var(--primary-blue);
+      font-size: 2.2rem;
+      border-bottom: 3px solid var(--primary-blue);
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .official-header p { color: #555; margin-top: 10px; font-size: 1.1rem; }
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .form-group { margin-bottom: 20px; text-align: right; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--text-dark); }
+    .form-group input {
+      width: 100%; padding: 12px;
+      border: 1px solid #ccc; border-radius: 4px;
+      font-family: 'Cairo'; font-size: 1rem;
+    }
+
+    .btn-official {
+      background: var(--primary-blue);
+      color: white; width: 100%; padding: 12px;
+      border: none; border-radius: 4px;
+      font-size: 1.2rem; font-weight: bold; cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-official:hover { background: #003366; }
+
+    /* ==================================================
+       HORROR THEME (The Reality)
+       ================================================== */
+    #horror-site {
+      display: none;
+      min-height: 100vh;
+      background-color: #020202;
+      color: #e0e6ed;
       position: relative;
     }
 
-    body.scared-flash {
-      animation: redFlash 0.5s ease;
-    }
-
-    @keyframes redFlash {
-      0% { background-color: #ff2a3a; }
-      100% { background-color: var(--bg-dark); }
-    }
-
-    /* Fog Canvas & Ghost Canvas Backgrounds */
-    #fog-canvas, #ghost-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    #ghost-canvas { z-index: 3; }
-
-    /* Vignette & Screen Overlay */
     .screen-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 5;
-      pointer-events: none;
-      background: 
-        radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.95) 100%),
-        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%);
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 5; pointer-events: none;
+      background: radial-gradient(circle at center, transparent 20%, rgba(0, 0, 0, 0.95) 100%),
+                  linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
       background-size: 100% 100%, 100% 4px;
     }
 
-    /* Initial Entry Intro Screen */
-    .intro-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: #050505;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      text-align: center;
+    #horror-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+
+    .stage-container {
+      position: relative; z-index: 10;
+      max-width: 800px; margin: 0 auto;
+      padding: 40px 20px; text-align: center;
     }
 
-    .intro-box {
-      background: rgba(20, 5, 8, 0.95);
-      border: 2px solid var(--red-glow);
+    .hud-bar {
+      display: flex; justify-content: space-between;
+      background: rgba(10, 0, 0, 0.8); border: 1px solid #7a121c;
+      padding: 15px 20px; border-radius: 8px; margin-bottom: 30px;
+    }
+    
+    .hud-bar span { color: #ff2a3a; font-weight: bold; }
+
+    /* Dynamic Stage Styles */
+    .stage-box {
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #ff2a3a;
+      border-radius: 10px;
       padding: 40px;
-      border-radius: 12px;
-      max-width: 520px;
-      box-shadow: 0 0 50px rgba(255, 42, 58, 0.5);
-    }
-
-    .intro-box h1 {
-      font-family: 'Amiri', serif;
-      color: var(--red-glow);
-      font-size: 2.6rem;
-      margin-bottom: 10px;
-    }
-
-    .intro-box input {
-      width: 100%;
-      background: #111;
-      border: 1px solid var(--red-glow);
-      color: var(--accent-gold);
-      padding: 12px;
-      margin: 20px 0;
-      border-radius: 6px;
-      font-size: 1.1rem;
-      text-align: center;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .btn-danger {
-      background: var(--red-dim);
-      color: white;
-      border: 1px solid var(--red-glow);
-      padding: 12px 30px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.3s;
-    }
-
-    .btn-danger:hover {
-      background: var(--red-glow);
-      box-shadow: 0 0 20px var(--red-glow);
-      transform: scale(1.05);
-    }
-
-    /* Perspective POV Scene */
-    .pov-container {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      box-shadow: 0 0 40px rgba(255, 42, 58, 0.3);
+      transition: all 1s ease;
+      position: relative;
       overflow: hidden;
     }
 
-    .courtyard-bg {
-      position: absolute;
-      width: 110%; height: 110%;
-      background: url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      filter: grayscale(80%) contrast(150%) brightness(35%) sepia(50%) hue-rotate(300deg);
-      transition: transform 0.1s ease-out;
-    }
-
-    .billboard {
-      position: absolute;
-      top: 15%;
-      background: rgba(0, 0, 0, 0.88);
-      border: 3px double var(--red-glow);
-      padding: 20px 40px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(255, 42, 58, 0.6);
-      transform: perspective(500px) rotateX(10deg);
-      animation: flicker 3s infinite alternate;
-    }
-
-    .billboard h3 { color: var(--accent-gold); font-size: 1.1rem; }
-    .billboard h2 { color: var(--red-glow); font-size: 2.2rem; font-family: 'Amiri', serif; }
-
-    /* HUD Dashboard Header */
-    .hud-header {
-      position: fixed;
-      top: 15px; left: 20px; right: 20px;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--panel-bg);
-      border: 1px solid var(--border-color);
-      padding: 12px 25px;
-      border-radius: 8px;
-    }
-
-    .timer-display {
-      color: var(--red-glow);
-      font-weight: 900;
-      font-size: 1.3rem;
-      background: rgba(255, 42, 58, 0.1);
-      border: 1px solid var(--red-glow);
-      padding: 4px 15px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* HUD Zones Grid at Bottom */
-    .hud-zones {
-      position: fixed;
-      bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      display: flex;
-      gap: 12px;
-      overflow-x: auto;
-      max-width: 95vw;
-      padding: 10px;
-    }
-
-    .hud-btn {
-      background: rgba(15, 18, 22, 0.9);
-      border: 1px solid var(--border-color);
-      color: white;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      white-space: nowrap;
-      transition: all 0.2s;
-      font-family: 'Cairo', sans-serif;
-    }
-
-    .hud-btn:hover {
-      background: var(--red-dim);
-      border-color: var(--red-glow);
-      transform: translateY(-3px);
-    }
-
-    /* Choice Step Modal Window */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.92);
-      z-index: 100;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active { display: flex; }
-
-    .modal-content {
-      background: #0f1216;
-      border: 2px solid var(--red-glow);
-      width: 100%;
-      max-width: 700px;
-      max-height: 85vh;
-      overflow-y: auto;
-      border-radius: 12px;
-      padding: 30px;
-      position: relative;
-      box-shadow: 0 0 50px rgba(255, 42, 58, 0.6);
-    }
-
-    .close-modal {
-      position: absolute;
-      top: 15px; left: 20px;
-      background: none; border: none;
-      color: var(--text-muted); font-size: 2rem;
-      cursor: pointer;
-    }
-
-    .close-modal:hover { color: var(--red-glow); }
-
-    .choice-step-title {
-      color: var(--accent-gold);
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-      border-bottom: 1px dashed var(--border-color);
-      padding-bottom: 5px;
-    }
-
-    .step-text {
-      font-size: 1.05rem;
-      line-height: 1.6;
+    .stage-title {
+      font-family: 'Amiri', serif;
+      font-size: 2.5rem; color: #ff2a3a;
       margin-bottom: 20px;
-      color: var(--text-light);
+      text-shadow: 2px 2px 5px #000;
+    }
+
+    .stage-text {
+      font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px;
     }
 
     .choice-btn {
-      display: block; width: 100%; text-align: right;
-      background: #181d24; border: 1px solid rgba(255,255,255,0.1);
-      color: white; padding: 14px 18px; margin: 10px 0;
-      border-radius: 6px; cursor: pointer; font-family: 'Cairo', sans-serif;
-      transition: all 0.2s ease;
+      display: block; width: 100%;
+      background: #111; border: 1px solid #444; color: white;
+      padding: 15px; margin: 15px 0; border-radius: 5px;
+      font-family: 'Cairo'; font-size: 1.1rem; cursor: pointer;
+      transition: all 0.3s; text-align: right;
     }
 
-    .choice-btn:hover {
-      background: var(--red-dim);
-      border-color: var(--red-glow);
-      transform: translateX(-5px);
+    .choice-btn:hover { background: #7a121c; border-color: #ff2a3a; transform: translateX(-10px); }
+
+    /* The Kill Screen (Jumpscare) */
+    #kill-screen {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; z-index: 999;
+      background: #000; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+    
+    .bloody-text {
+      font-family: 'Amiri', serif;
+      font-size: 8rem; color: #ff0000;
+      text-shadow: 0 0 20px #ff0000, 0 0 50px #800000;
+      animation: drip 0.5s infinite alternate, shake 0.1s infinite;
     }
 
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+    @keyframes drip { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+    @keyframes shake {
+      0% { transform: translate(2px, 1px) rotate(0deg); }
+      50% { transform: translate(-1px, -2px) rotate(-1deg); }
+      100% { transform: translate(-3px, 0px) rotate(1deg); }
+    }
+    @keyframes glitchOff {
+      0% { filter: invert(0); }
+      20% { filter: invert(1); background: red; }
+      100% { filter: invert(0); background: black; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Entry Intro Screen -->
-  <div class="intro-screen" id="intro-screen">
-    <div class="intro-box">
-      <h1>صدى الخرسانة</h1>
-      <p>أدخل اسمك لبدء التجربة وسماع صوت الأستاذ المرعب عند اتخاذ الخيارات الخاطئة!</p>
-      <input type="text" id="input-student-name" placeholder="أدخل اسمك الكامل..." value="طالب جديد">
-      <button class="btn-danger" onclick="startExperience()">دخول الساحة ومواجهة الأستاذ 👁️</button>
+  <!-- ==========================================
+       PHASE 1: THE NORMAL SITE (BAIT)
+       ========================================== -->
+  <div id="normal-site">
+    <div class="official-header">
+      <h1>المدرسة الوطنية العليا لأشغال العمومية</h1>
+      <p>البوابة الرقمية للطالب - ENSTP</p>
+    </div>
+    
+    <div class="login-box">
+      <div class="form-group">
+        <label>الاسم الكامل:</label>
+        <input type="text" id="student-name" placeholder="أدخل اسمك هنا...">
+      </div>
+      <div class="form-group">
+        <label>رقم التسجيل (اختياري):</label>
+        <input type="text" placeholder="مثال: 2026...">
+      </div>
+      <button class="btn-official" onclick="triggerNightmare()">تسجيل الدخول للدليل</button>
     </div>
   </div>
 
-  <canvas id="fog-canvas"></canvas>
-  <canvas id="ghost-canvas"></canvas>
-  <div class="screen-overlay"></div>
+  <!-- ==========================================
+       PHASE 2: THE HORROR EXPERIENCE
+       ========================================== -->
+  <div id="horror-site">
+    <canvas id="horror-canvas"></canvas>
+    <div class="screen-overlay"></div>
 
-  <!-- HUD Control Header -->
-  <div class="hud-header">
-    <div>
-      <span style="color:var(--text-muted)">المستكشف:</span>
-      <b id="hud-name" style="color:var(--accent-gold)">طالب جديد</b>
-    </div>
+    <div class="stage-container">
+      <div class="hud-bar">
+        <div>الضحية: <span id="hud-name">طالب</span></div>
+        <div>المرحلة: <span id="hud-stage">1 / 5</span></div>
+      </div>
 
-    <div class="timer-display">
-      ⏳ الوقت المتبقي: <span id="time-left">60</span>s
-    </div>
-
-    <div>
-      النقاط: <b id="hud-score" style="color:var(--accent-gold)">0</b> XP
-    </div>
-  </div>
-
-  <!-- Perspective Courtyard Scene -->
-  <div class="pov-container">
-    <div class="courtyard-bg" id="courtyard"></div>
-
-    <div class="billboard">
-      <h3>⚠️ الملاذ الأخير للطالب ⚠️</h3>
-      <h2 id="billboard-name">طالب جديد</h2>
-      <p style="color:var(--text-muted)">المدرسة الوطنية العليا لأشغال العمومية</p>
+      <div class="stage-box" id="stage-box">
+        <h2 class="stage-title" id="stage-title">عنوان المرحلة</h2>
+        <p class="stage-text" id="stage-text">نص القصة...</p>
+        <div id="options-container"></div>
+      </div>
     </div>
   </div>
 
-  <!-- HUD Bottom Zones List -->
-  <div class="hud-zones" id="hud-zones-list"></div>
-
-  <!-- Choice Modal Window -->
-  <div class="modal-overlay" id="modal">
-    <div class="modal-content">
-      <button class="close-modal" onclick="closeModal()">&times;</button>
-      <h2 style="color:var(--red-glow); margin-bottom:15px;" id="modal-title">عنوان القطاع</h2>
-      <div class="choice-step-title" id="choice-step-num">المرحلة 1 من الخيارات</div>
-      <div class="step-text" id="choice-step-text">تفاصيل الموقف والخيارات...</div>
-      <div id="choice-options-container"></div>
-    </div>
+  <!-- Jumpscare Screen -->
+  <div id="kill-screen">
+    <h1 class="bloody-text">سأقتلك</h1>
   </div>
 
   <script>
-    // Audio Context & Speech Synth Setup
+    /* ==========================================
+       AUDIO SYNTHESIS ENGINE (No external files)
+       ========================================== */
     let audioCtx = null;
+    let bgDrone = null;
+
     function initAudio() {
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    // Function to speak creepily in Arabic using Web Speech API
-    function speakProfessorCreepy(text) {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel(); // Stop any previous speech
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ar-SA';
-        utterance.pitch = 0.3; // Low creepy deep voice pitch
-        utterance.rate = 0.85;  // Slow authoritative speed
-        window.speechSynthesis.speak(utterance);
-      }
-    }
-
-    function playScareSound() {
+    // Creepy Background Drone
+    function startBackgroundHorror() {
       initAudio();
-      const osc = audioCtx.createOscillator();
+      if (bgDrone) return;
+      bgDrone = audioCtx.createOscillator();
+      const filter = audioCtx.createBiquadFilter();
       const gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-      osc.connect(gain);
+      
+      bgDrone.type = 'sawtooth';
+      bgDrone.frequency.value = 40; // Very low rumble
+      
+      filter.type = 'lowpass';
+      filter.frequency.value = 150;
+      
+      gain.gain.value = 0.3;
+
+      bgDrone.connect(filter);
+      filter.connect(gain);
       gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.4);
+      bgDrone.start();
     }
 
-    // State Variables
-    let playerName = "طالب جديد";
-    let playerScore = 0;
-    let timeLeft = 60;
-    let timerInterval = null;
-    let currentZone = null;
-    let currentStepIndex = 0;
-    let solvedZones = [];
+    // Synthetic Ear-Piercing Scream
+    function playScreamSound() {
+      initAudio();
+      
+      // Main screech oscillator
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc1.type = 'square';
+      osc2.type = 'sawtooth';
+      
+      // Start high, drop fast, vibrate
+      osc1.frequency.setValueAtTime(1000, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.8);
+      
+      osc2.frequency.setValueAtTime(1200, audioCtx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 1);
 
-    // Professor Creepy Scolding Quotes
-    const scoldQuotes = [
-      `إلى أين أنت ذاهب يا ${playerName}؟! هل تظن أن ميكانيكا المواد والخرسانة لعبة في يديك؟!`,
-      `تأخرت واخترت طريقاً خاطئاً يا ${playerName}... الغياب الثالث يعني إقصاءك الأبدي من المدرسة!`,
-      `لن تتخرج من هذه المدرسة أبداً يا ${playerName}... الساحة ستكون مقبرتك الدراسية!`,
-      `ركز يا ${playerName}! الإدارة والأساتذة يراقبون كل خطوة تخطوها في ظلمات القبة!`
-    ];
+      gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
 
-    // ENSTP Guide Scenarios
-    const zonesScenarios = [
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc1.start(); osc2.start();
+      osc1.stop(audioCtx.currentTime + 1.5);
+      osc2.stop(audioCtx.currentTime + 1.5);
+
+      // Attempt TTS Arabic creepy voice
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance("سأقتلك يا " + document.getElementById('hud-name').innerText);
+        msg.lang = 'ar-SA';
+        msg.pitch = 0.1;
+        msg.rate = 0.7;
+        window.speechSynthesis.speak(msg);
+      }
+    }
+
+    /* ==========================================
+       GAME LOGIC & STAGES
+       ========================================== */
+    let playerName = "طالب";
+    let currentStage = 0;
+
+    // Linear Story Progression
+    const stages = [
       {
-        id: "map",
-        title: "🗺️ خريطة المدرسة والموقع",
-        steps: [
-          {
-            text: "تصل إلى المدخل الرئيسي للمدرسة ليلاً والضباب يغطي معالم القبة. أي اتجاه تسلكه للوصول إلى الجناح البيدغوجي؟",
-            options: [
-              { label: "الاتجاه نحو مدرجات القبة العلوية", nextStep: 1, isCorrect: true },
-              { label: "الدخول إلى القبو المظلم تحصيناً من البرد", nextStep: -1, isCorrect: false }
-            ]
-          },
-          {
-            text: "ممتاز! أقتربت من المدرجات وتوصلت إلى الموقع الجغرافي للمدرسة. أين تقع المدرسة الوطنية العليا لأشغال العمومية بالظبط؟",
-            options: [
-              { label: "بلدية القبة - الجزائر العاصمة", nextStep: 'WIN', isCorrect: true },
-              { label: "منطقة باب الزوار", nextStep: -1, isCorrect: false }
-            ]
-          }
-        ]
+        title: "المرحلة الأولى: بوابة الجحيم",
+        text: "الضباب يغطي الساحة. البوابة مغلقة ولا يوجد حارس. الدليل يقول أن المدرسة في العاصمة. أين تقع المدرسة الوطنية العليا لأشغال العمومية للنجاة؟",
+        options: [
+          { text: "في منطقة القبة", correct: true },
+          { text: "في منطقة باب الزوار", correct: false }
+        ],
+        theme: { bg: "rgba(0,0,0,0.85)", border: "#ff2a3a" }
       },
       {
-        id: "admin",
-        title: "🏛️ الإدارة وشؤون الطلبة",
-        steps: [
-          {
-            text: "تبحث عن وثيقة التسجيل الخاصة بك داخل الأرشيف الإداري. تجد بابين مغلقين بصوت آلة كاتبة.",
-            options: [
-              { label: "فتح باب مصلحة شؤون الطلبة والدراسات", nextStep: 1, isCorrect: true },
-              { label: "فتح باب المخزن الرئيسي", nextStep: -1, isCorrect: false }
-            ]
-          },
-          {
-            text: "وجدتها! من هي المصلحة المسؤولة عن متابعة غياباتك وتسليم كشف النقاط؟",
-            options: [
-              { label: "مصلحة شؤون الطلبة والنيابة البيدغوجية", nextStep: 'WIN', isCorrect: true },
-              { label: "مكتب المراجع بالمكتبة المركزية", nextStep: -1, isCorrect: false }
-            ]
-          }
-        ]
+        title: "المرحلة الثانية: غرفة الأرشيف",
+        text: "دخلت المبنى. الإضاءة ترمش. تجد أوراقاً متناثرة. هناك من يتنفس خلفك بالظلام... أي مصلحة مسؤولة عن تسليم كشف نقاطك للهروب؟",
+        options: [
+          { text: "مكتبة المطالعة", correct: false },
+          { text: "مصلحة شؤون الطلبة والنيابة البيدغوجية", correct: true }
+        ],
+        theme: { bg: "rgba(30,0,0,0.9)", border: "#8b0000" } // Darker red
       },
       {
-        id: "schedule",
-        title: "⏳ استعمال الزمن والحضور",
-        steps: [
-          {
-            text: "تسمع دقات ساعة البرج المظلمة بتردد متسارع. ينبغي عليك التحقق من نظام الغيابات للحفاظ على مقعدك.",
-            options: [
-              { label: "الاطلاع على القانون الداخلي للحضور في TD وTP", nextStep: 1, isCorrect: true },
-              { label: "تجاهل الجدول ومغادرة القاعة", nextStep: -1, isCorrect: false }
-            ]
-          },
-          {
-            text: "ما هو عدد الغيابات غير المبررة التي تتسبب فوراً في إقصائك من المادة؟",
-            options: [
-              { label: "3 غيابات غير مبررة", nextStep: 'WIN', isCorrect: true },
-              { label: "10 غيابات كاملة", nextStep: -1, isCorrect: false }
-            ]
-          }
-        ]
+        title: "المرحلة الثالثة: دقات ساعة البرج",
+        text: "صوت خطوات تقترب بسرعة. الأستاذ الميت يبحث عن الغائبين! كم عدد الغيابات غير المبررة في الـ TD التي تؤدي لإقصائك فوراً؟",
+        options: [
+          { text: "3 غيابات وتُقصى", correct: true },
+          { text: "5 غيابات", correct: false }
+        ],
+        theme: { bg: "rgba(50,0,0,0.95)", border: "#ff0000" }, // Intense red
+        shake: true
       },
       {
-        id: "transport",
-        title: "🚌 النقل الجامعي",
-        steps: [
-          {
-            text: "تصل إلى المحطة المهجورة بالخارج وصوت صفير حافلة يقترب من بعيد. كيف تنقل نفسك للإقامة؟",
-            options: [
-              { label: "انتظار حافلات CUSTU الجامعية المخصصة", nextStep: 1, isCorrect: true },
-              { label: "المشي في الطرقات المظلمة ليلاً", nextStep: -1, isCorrect: false }
-            ]
-          },
-          {
-            text: "وصلت الحافلة! ما هي أسرع وسيلة نقل عامة بجانب الحافلات قريبة من القبة؟",
-            options: [
-              { label: "شبكة المترو للوصول لوسط العاصمة", nextStep: 'WIN', isCorrect: true },
-              { label: "القطار السريع العابر للولايات", nextStep: -1, isCorrect: false }
-            ]
-          }
-        ]
+        title: "المرحلة الرابعة: المائدة الدموية",
+        text: "تصل إلى المطعم الجامعي، لكن الصحون مليئة بالتراب والخرسانة. شخص ضخم يمنعك من العبور ويطلب بطاقتك. ما هو الشرط الأساسي لدخول المطعم؟",
+        options: [
+          { text: "لا يهم، سأمر بالقوة", correct: false },
+          { text: "إظهار بطاقة الطالب الجامعية", correct: true }
+        ],
+        theme: { bg: "rgba(10,10,10,0.95)", border: "#550000" }
+      },
+      {
+        title: "المرحلة الأخيرة: المخرج السري",
+        text: "وصلت للباب الأخير! الظلال تحيط بك من كل مكان. السؤال الأخير: كيف يتم تقييمك في التطبيقات الموجهة (TD) لتنجح وتخرج من هنا؟",
+        options: [
+          { text: "الاختبارات القصيرة (Interros) والمشاركة", correct: true },
+          { text: "الحضور فقط يكفي للنجاح", correct: false }
+        ],
+        theme: { bg: "rgba(80,0,0,0.98)", border: "#ffffff" }, // Final pure terror
+        shake: true
       }
     ];
 
-    function startExperience() {
-      const nameInput = document.getElementById('input-student-name').value.trim();
+    function triggerNightmare() {
+      const nameInput = document.getElementById('student-name').value.trim();
       if (nameInput) playerName = nameInput;
-
       document.getElementById('hud-name').innerText = playerName;
-      document.getElementById('billboard-name').innerText = playerName;
-      document.getElementById('intro-screen').style.display = 'none';
 
-      playScareSound();
-      speakProfessorCreepy(`أهلاً بك يا ${playerName} في ساحة الخرسانة... لا تخطئ في إجاباتك!`);
-      renderHUDZones();
-
-      timerInterval = setInterval(updateTimer, 1000);
+      // 1. Freeze normal site, flash screen
+      document.body.style.animation = "glitchOff 1.5s linear";
+      initAudio(); // Initialize audio context on first click
+      
+      setTimeout(() => {
+        // 2. Hide normal, show horror
+        document.getElementById('normal-site').style.display = 'none';
+        document.getElementById('horror-site').style.display = 'block';
+        startBackgroundHorror();
+        loadStage(currentStage);
+        initHorrorCanvas();
+      }, 1500);
     }
 
-    function updateTimer() {
-      if (timeLeft > 0) {
-        timeLeft--;
-        document.getElementById('time-left').innerText = timeLeft;
-      } else {
-        playScareSound();
-        const randomScold = scoldQuotes[Math.floor(Math.random() * scoldQuotes.length)];
-        speakProfessorCreepy(randomScold);
-        triggerRedFlash();
-        timeLeft = 60;
-        document.getElementById('time-left').innerText = timeLeft;
+    function loadStage(index) {
+      if (index >= stages.length) {
+        showWinScreen();
+        return;
       }
-    }
 
-    function triggerRedFlash() {
-      document.body.classList.add('scared-flash');
-      setTimeout(() => document.body.classList.remove('scared-flash'), 500);
-    }
+      const stage = stages[index];
+      document.getElementById('hud-stage').innerText = `${index + 1} / 5`;
+      document.getElementById('stage-title').innerText = stage.title;
+      
+      // Personalize the text
+      let personalizedText = stage.text.replace("دخلت", `دخلت يا ${playerName}`);
+      document.getElementById('stage-text').innerText = personalizedText;
 
-    function renderHUDZones() {
-      const list = document.getElementById('hud-zones-list');
-      list.innerHTML = '';
-      zonesScenarios.forEach(zone => {
-        const isSolved = solvedZones.includes(zone.id);
-        const btn = document.createElement('button');
-        btn.className = 'hud-btn';
-        btn.innerHTML = `${zone.title} ${isSolved ? '✔' : ''}`;
-        btn.onclick = () => openScenarioModal(zone);
-        list.appendChild(btn);
-      });
-    }
+      // Update Theme (Design changes as requested)
+      const box = document.getElementById('stage-box');
+      box.style.background = stage.theme.bg;
+      box.style.borderColor = stage.theme.border;
+      
+      if (stage.shake) {
+        box.style.animation = "shake 0.5s infinite";
+      } else {
+        box.style.animation = "none";
+      }
 
-    function openScenarioModal(zone) {
-      currentZone = zone;
-      currentStepIndex = 0;
-      document.getElementById('modal-title').innerText = zone.title;
-      renderCurrentStep();
-      document.getElementById('modal').classList.add('active');
-    }
-
-    function renderCurrentStep() {
-      const step = currentZone.steps[currentStepIndex];
-      document.getElementById('choice-step-num').innerText = `المرحلة ${currentStepIndex + 1} من الخيارات`;
-      document.getElementById('choice-step-text').innerText = step.text;
-
-      const container = document.getElementById('choice-options-container');
+      // Render Options
+      const container = document.getElementById('options-container');
       container.innerHTML = '';
-
-      step.options.forEach(opt => {
+      stage.options.forEach(opt => {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
-        btn.innerText = opt.label;
-        btn.onclick = () => makeChoice(opt);
+        btn.innerText = opt.text;
+        btn.onclick = () => handleChoice(opt.correct);
         container.appendChild(btn);
       });
     }
 
-    function makeChoice(option) {
-      if (!option.isCorrect) {
-        playScareSound();
-        triggerRedFlash();
-        const randomScold = scoldQuotes[Math.floor(Math.random() * scoldQuotes.length)];
-        speakProfessorCreepy(randomScold); // Professor speaks Creepy Voice
-        timeLeft = Math.max(0, timeLeft - 10);
-        closeModal();
+    function handleChoice(isCorrect) {
+      if (isCorrect) {
+        // Success -> Next Stage
+        currentStage++;
+        loadStage(currentStage);
       } else {
-        if (option.nextStep === 'WIN') {
-          playScareSound();
-          speakProfessorCreepy(`ممتاز يا ${playerName}! استطعت الإجابة بشكل صحيح وتفادي العقاب هذه المرة.`);
-          solvedZones.push(currentZone.id);
-          playerScore += 20;
-          timeLeft += 15;
-          document.getElementById('hud-score').innerText = playerScore;
-          renderHUDZones();
-          closeModal();
-        } else {
-          currentStepIndex = option.nextStep;
-          renderCurrentStep();
-        }
+        // Fail -> JUMPSCARE & DEATH
+        triggerDeath();
       }
     }
 
-    function closeModal() {
-      document.getElementById('modal').classList.remove('active');
+    function triggerDeath() {
+      // Show bloody screen and scream
+      const killScreen = document.getElementById('kill-screen');
+      killScreen.style.display = 'flex';
+      playScreamSound();
+
+      // Reset after a few seconds
+      setTimeout(() => {
+        killScreen.style.display = 'none';
+        currentStage = 0; // Restart game
+        loadStage(currentStage);
+      }, 4000);
     }
 
-    // Animated Ghosts Canvas
-    const gCanvas = document.getElementById('ghost-canvas');
-    const gCtx = gCanvas.getContext('2d');
-    let ghosts = [];
-
-    function resizeGCanvas() {
-      gCanvas.width = window.innerWidth;
-      gCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeGCanvas);
-    resizeGCanvas();
-
-    for (let i = 0; i < 5; i++) {
-      ghosts.push({
-        x: Math.random() * gCanvas.width,
-        y: Math.random() * gCanvas.height,
-        size: Math.random() * 40 + 60,
-        speed: Math.random() * 1 + 0.5,
-        alpha: Math.random() * 0.4 + 0.2
-      });
+    function showWinScreen() {
+      const box = document.getElementById('stage-box');
+      box.innerHTML = `
+        <h2 style="color:#d4af37; font-size:3rem; font-family:'Amiri';">نجوت... مؤقتاً</h2>
+        <p style="font-size:1.5rem; margin-top:20px;">أحسنت يا ${playerName}. لقد قرأت دليل ENSTP جيداً. أبواب المدرسة تُفتح لك في الواقع... نتمنى لك دراسة موفقة!</p>
+        <button class="choice-btn" style="text-align:center; background:#d4af37; color:#000;" onclick="location.reload()">العودة للواقع</button>
+      `;
+      box.style.animation = "none";
+      box.style.borderColor = "#d4af37";
+      if(bgDrone) { bgDrone.stop(); bgDrone = null; }
     }
 
-    function animateGhosts() {
-      gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
-      ghosts.forEach(g => {
-        g.y -= g.speed;
-        if (g.y < -100) g.y = gCanvas.height + 100;
+    /* ==========================================
+       BACKGROUND ANIMATION ENGINE (Red Mist)
+       ========================================== */
+    function initHorrorCanvas() {
+      const canvas = document.getElementById('horror-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
 
-        gCtx.save();
-        gCtx.globalAlpha = g.alpha;
-        gCtx.fillStyle = '#ff2a3a';
-        gCtx.beginPath();
-        gCtx.arc(g.x, g.y, g.size, 0, Math.PI * 2);
-        gCtx.fill();
-        gCtx.restore();
-      });
-      requestAnimationFrame(animateGhosts);
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 100 + 50,
+          speedX: Math.random() * 2 - 1,
+          speedY: Math.random() * 1 - 0.5,
+          alpha: Math.random() * 0.3 + 0.1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.speedX; p.y += p.speedY;
+          if (p.x < -p.r) p.x = canvas.width + p.r;
+          if (p.x > canvas.width + p.r) p.x = -p.r;
+          if (p.y < -p.r) p.y = canvas.height + p.r;
+          if (p.y > canvas.height + p.r) p.y = -p.r;
+
+          ctx.beginPath();
+          let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+          
+          // Color changes based on stage (gets redder)
+          let color = currentStage >= 2 ? `rgba(255, 0, 0, ${p.alpha})` : `rgba(150, 20, 20, ${p.alpha})`;
+          
+          grad.addColorStop(0, color);
+          grad.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = grad;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
     }
-    animateGhosts();
-
-    // Fog Animation Canvas
-    const canvas = document.getElementById('fog-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    for (let i = 0; i < 30; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 80 + 40,
-        alpha: Math.random() * 0.2 + 0.05,
-        speedX: Math.random() * 0.6 - 0.3,
-        speedY: Math.random() * 0.4 - 0.2
-      });
-    }
-
-    function animateFog() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.x += p.speedX; p.y += p.speedY;
-        if (p.x < 0) p.x = canvas.width;
-        if (p.x > canvas.width) p.x = 0;
-        if (p.y < 0) p.y = canvas.height;
-        if (p.y > canvas.height) p.y = 0;
-
-        ctx.beginPath();
-        let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-        grad.addColorStop(0, `rgba(255, 42, 58, ${p.alpha})`);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = grad;
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(animateFog);
-    }
-    animateFog();
   </script>
 </body>
 </html>

@@ -1,101 +1,619 @@
-/* ==========================================
-       NIGHT SURVIVAL SCENARIOS (Algiers/Kouba)
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENSTP - البوابة الرقمية الرسمية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==================================================
+       PHASE 1: NORMAL THEME (The Ultra-Realistic Bait)
+       ================================================== */
+    :root {
+      --primary-blue: #00457c;
+      --light-bg: #f4f7f9;
+      --text-dark: #2c3e50;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    
+    body {
+      font-family: 'Cairo', sans-serif;
+      overflow-x: hidden;
+      background-color: var(--light-bg);
+    }
+
+    #normal-site {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: space-between; min-height: 100vh;
+      background: linear-gradient(135deg, #ffffff 0%, #eef2f5 100%);
+    }
+
+    .top-bar {
+      width: 100%; background: var(--primary-blue); color: white;
+      text-align: center; padding: 10px; font-size: 0.9rem;
+    }
+
+    .official-header { text-align: center; margin: 40px 0 20px 0; }
+    .official-header h1 {
+      color: var(--primary-blue); font-size: 2.4rem;
+      border-bottom: 4px solid var(--primary-blue);
+      padding-bottom: 10px; display: inline-block;
+    }
+    .official-header p { color: #555; margin-top: 10px; font-size: 1.2rem; font-weight: bold; }
+
+    .login-box {
+      background: white; padding: 40px; border-radius: 12px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05); width: 100%; max-width: 450px;
+      border: 1px solid #e1e8ed;
+    }
+
+    .form-group { margin-bottom: 25px; text-align: right; }
+    .form-group label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--text-dark); }
+    .form-group input {
+      width: 100%; padding: 14px; border: 1px solid #ccd6dd;
+      border-radius: 6px; font-family: 'Cairo'; font-size: 1rem;
+      background-color: #fcfcfc; transition: border 0.3s;
+    }
+    .form-group input:focus { border-color: var(--primary-blue); outline: none; }
+
+    .btn-official {
+      background: var(--primary-blue); color: white; width: 100%;
+      padding: 14px; border: none; border-radius: 6px;
+      font-size: 1.2rem; font-weight: bold; cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-official:hover { background: #00335e; transform: translateY(-2px); }
+    .warning-text { color: #e74c3c; font-size: 0.9rem; text-align: center; margin-top: 15px; font-weight: bold;}
+
+    .footer {
+      width: 100%; text-align: center; color: #7f8c8d;
+      padding: 20px; font-size: 0.85rem; margin-top: auto;
+    }
+
+    /* Glitch Animation for Transition */
+    .glitch-active {
+      animation: severeGlitch 0.2s infinite;
+      filter: invert(1) contrast(200%);
+    }
+
+    @keyframes severeGlitch {
+      0% { transform: translate(0) skew(0); }
+      20% { transform: translate(-10px, 5px) skew(10deg); }
+      40% { transform: translate(10px, -5px) skew(-10deg); filter: hue-rotate(90deg); }
+      60% { transform: translate(-20px, 10px) skew(20deg); }
+      80% { transform: translate(20px, -10px) skew(-20deg); }
+      100% { transform: translate(0) skew(0); }
+    }
+
+    /* ==================================================
+       PHASE 2: HORROR THEME (The Nightmare)
+       ================================================== */
+    #horror-site {
+      display: none; min-height: 100vh; background-color: #020000;
+      color: #e0e6ed; position: relative;
+    }
+
+    .screen-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 5; pointer-events: none;
+      background: radial-gradient(circle at center, transparent 15%, rgba(0, 0, 0, 0.98) 100%),
+                  linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.6) 50%);
+      background-size: 100% 100%, 100% 4px;
+    }
+
+    #horror-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: 0.6; }
+
+    .stage-container {
+      position: relative; z-index: 10; max-width: 800px;
+      margin: 0 auto; padding: 40px 20px; text-align: center;
+    }
+
+    .hud-bar {
+      display: flex; justify-content: space-between;
+      background: rgba(15, 0, 0, 0.9); border: 1px solid #7a121c;
+      padding: 15px 25px; border-radius: 8px; margin-bottom: 40px;
+      box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+    }
+    .hud-bar span { color: #ff2a3a; font-weight: bold; font-size: 1.2rem; }
+
+    .stage-box {
+      background: rgba(10, 0, 0, 0.85); border: 2px solid #ff2a3a;
+      border-radius: 12px; padding: 50px 40px;
+      box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.1), 0 0 50px rgba(255, 42, 58, 0.3);
+      transition: all 0.5s ease; position: relative; overflow: hidden;
+    }
+
+    .stage-title {
+      font-family: 'Amiri', serif; font-size: 2.5rem; color: #ff2a3a;
+      margin-bottom: 25px; text-shadow: 3px 3px 10px #000;
+    }
+    .stage-text {
+      font-size: 1.4rem; line-height: 1.9; margin-bottom: 40px; font-weight: bold; color: #ddd;
+    }
+    .choice-btn {
+      display: block; width: 100%; background: #0a0a0a; border: 1px solid #333;
+      color: #ccc; padding: 18px; margin: 15px 0; border-radius: 8px;
+      font-family: 'Cairo'; font-size: 1.2rem; cursor: pointer;
+      transition: all 0.3s; text-align: right; position: relative; overflow: hidden;
+    }
+    .choice-btn:hover { 
+      background: #4a0505; border-color: #ff2a3a; color: white;
+      transform: translateX(-10px) scale(1.02);
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    }
+
+    /* The Kill Screen */
+    #kill-screen {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; z-index: 999;
+      background: #000; flex-direction: column;
+      justify-content: center; align-items: center;
+    }
+    .bloody-text {
+      font-family: 'Amiri', serif; font-size: 10rem; color: #ff0000;
+      text-shadow: 0 0 30px #ff0000, 0 0 80px #800000;
+      animation: shake 0.05s infinite;
+    }
+
+    /* ==================================================
+       PHASE 3: FINALE THEME (تنظيم السما)
+       ================================================== */
+    #finale-screen {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; z-index: 1000;
+      background: radial-gradient(ellipse at bottom, #090a0f 0%, #000000 100%);
+      flex-direction: column; justify-content: center; align-items: center;
+      overflow: hidden;
+    }
+
+    /* Static Stars */
+    .star {
+      position: absolute; background: white; border-radius: 50%;
+      animation: twinkle infinite alternate;
+    }
+    
+    /* Shooting Stars */
+    .shooting-star {
+      position: absolute;
+      width: 100px; height: 2px;
+      background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+      transform: rotate(-45deg);
+      opacity: 0;
+      animation: shooting 4s linear infinite;
+    }
+
+    @keyframes shooting {
+      0% { transform: rotate(-45deg) translateX(0); opacity: 1; }
+      20% { transform: rotate(-45deg) translateX(-500px); opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* Magical Finale Text */
+    .sky-message {
+      font-family: 'Amiri', serif;
+      font-size: 5.5rem;
+      color: #fff;
+      text-align: center;
+      line-height: 1.4;
+      text-shadow: 0 0 20px #00e5ff, 0 0 40px #00a2ff, 0 0 80px #0044ff;
+      animation: float 4s ease-in-out infinite, glowPulse 2s infinite alternate;
+      z-index: 10;
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    .show-sky-message {
+      animation: zoomInReveal 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, 
+                 float 4s ease-in-out infinite 2.5s, 
+                 glowPulse 2.5s infinite alternate 2.5s;
+    }
+
+    @keyframes zoomInReveal {
+      0% { opacity: 0; transform: scale(0.3) translateY(50px); filter: blur(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 20px #00e5ff, 0 0 30px #00a2ff; }
+      100% { text-shadow: 0 0 40px #00e5ff, 0 0 70px #00a2ff, 0 0 120px #0044ff; }
+    }
+    @keyframes twinkle {
+      0% { opacity: 0.1; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1.5); }
+    }
+    @keyframes shake {
+      0% { transform: translate(5px, 2px) rotate(0deg); }
+      50% { transform: translate(-2px, -5px) rotate(-2deg); }
+      100% { transform: translate(-5px, 0px) rotate(2deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PHASE 1: NORMAL SITE (The Trap) -->
+  <div id="normal-site">
+    <div class="top-bar">الجمهورية الجزائرية الديمقراطية الشعبية - وزارة التعليم العالي والبحث العلمي</div>
+    
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+      <div class="official-header">
+        <h1>المدرسة الوطنية العليا لأشغال العمومية</h1>
+        <p>البوابة الرقمية للطالب - فضاء الخدمات الأكاديمية</p>
+      </div>
+      <div class="login-box" id="login-box">
+        <div class="form-group">
+          <label>الاسم واللقب:</label>
+          <input type="text" id="student-name" placeholder="أدخل اسمك الكامل للتسجيل...">
+        </div>
+        <button class="btn-official" id="login-btn" onclick="initiateSequence()">تسجيل الدخول</button>
+        <p class="warning-text">⚠️ يُرجى رفع مستوى الصوت في جهازك لضمان عمل نظام البوابة.</p>
+      </div>
+    </div>
+    
+    <div class="footer">
+      © 2026 المدرسة الوطنية العليا لأشغال العمومية (ENSTP) - جميع الحقوق محفوظة.
+    </div>
+  </div>
+
+  <!-- PHASE 2: HORROR GAME -->
+  <div id="horror-site">
+    <canvas id="horror-canvas"></canvas>
+    <div class="screen-overlay"></div>
+    <div class="stage-container">
+      <div class="hud-bar">
+        <div>الضحية: <span id="hud-name">طالب</span></div>
+        <div>تحدي النجاة: <span id="hud-stage">1 / 12</span></div>
+      </div>
+      <div class="stage-box" id="stage-box">
+        <h2 class="stage-title" id="stage-title">عنوان المرحلة</h2>
+        <p class="stage-text" id="stage-text">نص اللغز...</p>
+        <div id="options-container"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JUMPSCARE SCREEN -->
+  <div id="kill-screen">
+    <h1 class="bloody-text">سأقتلك</h1>
+  </div>
+
+  <!-- PHASE 3: THE FINALE (تنظيم السما) -->
+  <div id="finale-screen">
+    <!-- Stars and Shooting Stars injected via JS -->
+    <h1 class="sky-message" id="final-text">
+      انضم إلينا هذا الأربعاء
+      <br>
+      <span style="font-size: 0.45em; font-family: 'Cairo', sans-serif; letter-spacing: 4px; color: #a8d5ff; font-weight: normal;">
+        Rejoignez-nous ce mercredi
+      </span>
+    </h1>
+  </div>
+
+  <script>
+    /* ==========================================
+       AUDIO & GLITCH SYSTEM 
+       ========================================== */
+    let audioCtx = null;
+    let bgDrone = null;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    // صوت التشويش الإلكتروني لحظة سحب اللاعب للظلام
+    function playGlitchNoise() {
+      initAudio();
+      const bufferSize = audioCtx.sampleRate * 1.5; // 1.5 seconds of noise
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1; // White noise
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1000;
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(1, audioCtx.currentTime + 0.2);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1.5);
+      
+      noise.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+      noise.start();
+    }
+
+    function startBackgroundHorror() {
+      initAudio();
+      if (bgDrone) return;
+      bgDrone = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      bgDrone.type = 'sine';
+      bgDrone.frequency.value = 45; // Very deep hum
+      gain.gain.value = 0.6;
+      bgDrone.connect(gain);
+      gain.connect(audioCtx.destination);
+      bgDrone.start();
+    }
+
+    function playScreamSound() {
+      initAudio();
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc1.type = 'sawtooth'; osc2.type = 'square';
+      osc1.frequency.setValueAtTime(2000, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 1.5);
+      osc2.frequency.setValueAtTime(2500, audioCtx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 1.5);
+
+      gain.gain.setValueAtTime(1, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2);
+
+      osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+      osc1.start(); osc2.start();
+      osc1.stop(audioCtx.currentTime + 2); osc2.stop(audioCtx.currentTime + 2);
+    }
+
+    /* ==========================================
+       12 SCENARIOS POOL (Algiers/Kouba Night Survival)
        ========================================== */
     const riddlesPool = [
       {
         title: "الهروب تحت الأرض",
         text: "إنها الثانية صباحاً. الكيان المجهول يطاردك في شوارع 'القاريدي' المظلمة. تحتاج للنزول تحت الأرض لتختبئ وتهرب... ما هي أقرب محطة ميترو لك؟",
-        options: [
-          { text: "محطة ميترو حي البدر", correct: true },
-          { text: "محطة ميترو تافورة", correct: false }
-        ]
+        options: [{ text: "محطة ميترو حي البدر", correct: true }, { text: "محطة ميترو تافورة", correct: false }]
       },
       {
         title: "القهوة الملعونة",
-        text: "الساعة 3 فجراً. عيناك تنغلقان وإذا نمت سيقضي عليك الجاثوم. تحتاج إلى مقهى مفتوح أو آلة قهوة في مكان مضاء. أين تتجه لتبقى مستيقظاً؟",
-        options: [
-          { text: "مقهى محطة البنزين في القبة", correct: true },
-          { text: "حديقة التجارب المظلمة", correct: false }
-        ]
+        text: "الساعة 3 فجراً. عيناك تنغلقان وإذا نمت سيقضي عليك الجاثوم. تحتاج إلى مكان مضاء ومقهى مفتوح. أين تتجه لتبقى مستيقظاً؟",
+        options: [{ text: "مقهى محطة البنزين بالقبة", correct: true }, { text: "حديقة التجارب المظلمة", correct: false }]
       },
       {
         title: "النزيف الصامت",
-        text: "لقد جرحك ذلك الشيء في الظلام وأنت تنزف بغزارة. تحتاج إلى إيقاف النزيف فوراً قبل أن يشم رائحة دمك. أين تجد الإسعافات ليلاً؟",
-        options: [
-          { text: "مستشفى بشير منتوري (القبة)", correct: true },
-          { text: "العيادة الجامعية المغلقة", correct: false }
-        ]
+        text: "لقد جرحك ذلك الشيء في الظلام وأنت تنزف بغزارة. تحتاج إلى إيقاف النزيف فوراً. أين تجد الإسعافات ليلاً بالقبة؟",
+        options: [{ text: "مستشفى بشير منتوري", correct: true }, { text: "العيادة الجامعية المغلقة", correct: false }]
       },
       {
         title: "الملاذ الأخير",
-        text: "توقفت حركة الميترو والترامواي. الشوارع فارغة تماماً والكلاب الضالة تعوي. ما هي المحطة الكبرى التي تجد فيها سيارات أجرة (تاكسي) وحافلات في هذا الوقت المتأخر؟",
-        options: [
-          { text: "محطة الخروبة (Kharouba)", correct: true },
-          { text: "محطة زرالدة", correct: false }
-        ]
+        text: "توقفت حركة الميترو والترامواي. الشوارع فارغة تماماً والكلاب تعوي. ما هي المحطة الكبرى التي تجد فيها سيارات أجرة ليلاً؟",
+        options: [{ text: "محطة الخروبة (Kharouba)", correct: true }, { text: "محطة زرالدة", correct: false }]
       },
       {
         title: "الدواء المر",
-        text: "أصابتك حمى شديدة وبدأت تهلوس وترى أشباحاً تقترب. تحتاج لدواء مهدئ فوراً. أين ستجد الدواء في الرابعة صباحاً؟",
-        options: [
-          { text: "صيدلية المناوبة (Garde) في وسط القبة", correct: true },
-          { text: "المركز التجاري باب الزوار", correct: false }
-        ]
+        text: "أصابتك حمى شديدة وبدأت ترى أشباحاً تقترب. تحتاج لدواء مهدئ فوراً. أين ستجد الدواء في الرابعة صباحاً؟",
+        options: [{ text: "صيدلية المناوبة (Garde) في وسط القبة", correct: true }, { text: "المركز التجاري باب الزوار", correct: false }]
       },
       {
         title: "صوت السكك الحديدية",
-        text: "تسمع صوت صفارة بعيدة وسط الضباب. هناك قطار ليلي لنقل البضائع قد تنسل داخله وتهرب من العاصمة. أين تقع أقرب محطة قطار لك؟",
-        options: [
-          { text: "محطة قطار حسين داي", correct: true },
-          { text: "محطة آغا في وسط العاصمة", correct: false }
-        ]
+        text: "تسمع صوت قطار ليلي لنقل البضائع، قد تنسل داخله وتهرب. أين تقع أقرب محطة قطار للفرار؟",
+        options: [{ text: "محطة قطار حسين داي", correct: true }, { text: "محطة آغا في وسط العاصمة", correct: false }]
       },
       {
         title: "تقاطع الموت",
-        text: "أنت تجري باتجاه مسار الترامواي. التيار الكهربائي مقطوع، لكنك تحتاج للوصول إلى أقرب محطة التقاء (Correspondance) لتجد مخرجاً... ما هي؟",
-        options: [
-          { text: "محطة المعدومين (Les Fusillés)", correct: true },
-          { text: "محطة جامعة باب الزوار", correct: false }
-        ]
+        text: "التيار الكهربائي مقطوع، تحتاج للوصول إلى أقرب محطة التقاء (Correspondance) لتجد مخرجاً... ما هي المحطة الأقرب؟",
+        options: [{ text: "محطة المعدومين (Les Fusillés)", correct: true }, { text: "محطة جامعة باب الزوار", correct: false }]
       },
       {
         title: "جوع منتصف الليل",
-        text: "لم تأكل شيئاً منذ يومين. المطعم الجامعي مغلق، وخطوات ثقيلة تقترب من غرفتك. أين تجد طعاماً سريعاً في الشارع ليلاً قبل أن تفقد وعيك؟",
-        options: [
-          { text: "محلات الشوارما في القبة أو حسين داي", correct: true },
-          { text: "غابة بن عكنون المهجورة", correct: false }
-        ]
+        text: "لم تأكل منذ يومين، خطوات ثقيلة تقترب، وأنت تفقد طاقتك. أين تجد طعاماً سريعاً في الشارع ليلاً قبل أن تفقد وعيك؟",
+        options: [{ text: "محلات الشوارما في القبة أو حسين داي", correct: true }, { text: "غابة بن عكنون المهجورة", correct: false }]
       },
       {
         title: "طريق النجاة",
-        text: "وجدت سيارة مركونة ومفتاحها بداخلها! شغلت المحرك، لكن الظلال تسد الطرق الفرعية. ما هو الطريق السريع الأقرب للقبة للهروب؟",
-        options: [
-          { text: "الطريق السريع الجنوبي (Rocade Sud)", correct: true },
-          { text: "طريق الكورنيش نحو البحر", correct: false }
-        ]
+        text: "وجدت سيارة مركونة ومفتاحها بداخلها. الظلال تسد الطرق الفرعية. ما هو الطريق السريع الأقرب للقبة للهروب؟",
+        options: [{ text: "الطريق السريع الجنوبي (Rocade Sud)", correct: true }, { text: "طريق الكورنيش نحو البحر", correct: false }]
       },
       {
         title: "المكان الآمن",
-        text: "الشيء الذي يطاردك لا يقترب من الأضواء الساطعة ولا من الأماكن المحروسة. أين يمكنك الجلوس بأمان حتى طلوع الفجر؟",
-        options: [
-          { text: "بالقرب من مركز الشرطة المركزي بالقبة", correct: true },
-          { text: "في قبو المدرسة الوطنية للأشغال العمومية", correct: false }
-        ]
+        text: "الشيء الذي يطاردك يكره الأضواء الساطعة والأماكن المحروسة. أين يمكنك الجلوس بأمان حتى طلوع الفجر؟",
+        options: [{ text: "بالقرب من مركز الشرطة المركزي بالقبة", correct: true }, { text: "في قبو المدرسة الوطنية للأشغال", correct: false }]
       },
       {
         title: "السرير البارد",
-        text: "وصلت أخيراً إلى سكنك الجامعي بعد منتصف الليل، لكن الباب الرئيسي مقفل وحارس الإقامة نائم. كيف تتصرف لتنجو من الليل؟",
-        options: [
-          { text: "الانتظار في مكان مضاء حتى يفتح الباب", correct: true },
-          { text: "القفز فوق السور المليء بالزجاج المكسور", correct: false }
-        ]
+        text: "وصلت أخيراً إلى سكنك الجامعي لكن الباب الرئيسي مقفل وحارس الإقامة نائم. كيف تتصرف لتنجو من هذا الليل؟",
+        options: [{ text: "الانتظار بهدوء في مكان مضاء حتى يفتح", correct: true }, { text: "القفز فوق السور المليء بالزجاج", correct: false }]
       },
       {
         title: "العطش القاتل",
-        text: "ركضت لساعات حتى جف ريقك. تحتاج لقارورة ماء لكي تستعيد طاقتك وتكمل الهرب. المحلات الكبرى مغلقة. أين تذهب؟",
-        options: [
-          { text: "أكشاك التبغ (Cosmétiques/Tabac) المفتوحة ليلاً", correct: true },
-          { text: "شرب الماء من نافورة قديمة في مقبرة", correct: false }
-        ]
+        text: "ركضت لساعات حتى جف ريقك. تحتاج لقارورة ماء لكي تستعيد طاقتك وتكمل الهرب. أين تذهب؟",
+        options: [{ text: "أكشاك التبغ (Cosmétiques) المفتوحة ليلاً", correct: true }, { text: "شرب الماء من نافورة مقبرة قريبة", correct: false }]
       }
     ];
+
+    /* ==========================================
+       GAME LOGIC & TRANSITIONS
+       ========================================== */
+    let playerName = "طالب";
+    let activeStages = [];
+    let currentStageIndex = 0;
+    const TOTAL_CHALLENGES = 12;
+
+    function getRandomStages() {
+      let shuffled = riddlesPool.sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, TOTAL_CHALLENGES); 
+    }
+
+    function initiateSequence() {
+      const nameInput = document.getElementById('student-name').value.trim();
+      if (nameInput) playerName = nameInput;
+      document.getElementById('hud-name').innerText = playerName;
+
+      // 1. Fake Loading state
+      const btn = document.getElementById('login-btn');
+      btn.innerText = "جارٍ التحقق من البيانات...";
+      btn.style.background = "#7f8c8d";
+      
+      initAudio();
+
+      // 2. Trigger Glitch after 1 second
+      setTimeout(() => {
+        document.body.classList.add('glitch-active');
+        playGlitchNoise(); // Scary static sound
+      }, 1000);
+      
+      // 3. Enter Horror Mode after 2.5 seconds
+      setTimeout(() => {
+        document.body.classList.remove('glitch-active');
+        document.getElementById('normal-site').style.display = 'none';
+        document.getElementById('horror-site').style.display = 'block';
+        
+        startBackgroundHorror();
+        activeStages = getRandomStages(); 
+        currentStageIndex = 0;
+        
+        loadStage();
+        initHorrorCanvas();
+      }, 2500);
+    }
+
+    function loadStage() {
+      if (currentStageIndex >= TOTAL_CHALLENGES) {
+        showWinScreen();
+        return;
+      }
+
+      const stage = activeStages[currentStageIndex];
+      document.getElementById('hud-stage').innerText = `${currentStageIndex + 1} / ${TOTAL_CHALLENGES}`;
+      document.getElementById('stage-title').innerText = stage.title;
+      document.getElementById('stage-text').innerText = `اسمعني يا ${playerName}... ${stage.text}`;
+
+      let shuffledOptions = stage.options.sort(() => 0.5 - Math.random());
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+      
+      shuffledOptions.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerText = opt.text;
+        btn.onclick = () => handleChoice(opt.correct);
+        container.appendChild(btn);
+      });
+
+      // Darken and redden the box progressively
+      const box = document.getElementById('stage-box');
+      const intensity = 0.2 + (currentStageIndex * 0.06); 
+      box.style.background = `rgba(${Math.floor(100 * intensity)},0,0,0.85)`;
+      box.style.boxShadow = `inset 0 0 30px rgba(255, 0, 0, ${intensity}), 0 0 50px rgba(255, 42, 58, ${intensity+0.2})`;
+    }
+
+    function handleChoice(isCorrect) {
+      if (isCorrect) {
+        currentStageIndex++;
+        loadStage();
+      } else {
+        triggerDeath();
+      }
+    }
+
+    function triggerDeath() {
+      const killScreen = document.getElementById('kill-screen');
+      killScreen.style.display = 'flex';
+      playScreamSound();
+
+      setTimeout(() => {
+        killScreen.style.display = 'none';
+        activeStages = getRandomStages(); 
+        currentStageIndex = 0;
+        loadStage();
+      }, 3000);
+    }
+
+    /* ==========================================
+       THE FINALE (STARRY SKY + SHOOTING STARS)
+       ========================================== */
+    function showWinScreen() {
+      document.getElementById('horror-site').style.display = 'none';
+      if(bgDrone) { bgDrone.stop(); bgDrone = null; }
+
+      const finaleScreen = document.getElementById('finale-screen');
+      finaleScreen.style.display = 'flex';
+      
+      createStars(); 
+      createShootingStars(); 
+
+      setTimeout(() => {
+        const text = document.getElementById('final-text');
+        text.classList.add('show-sky-message');
+      }, 800);
+    }
+
+    function createStars() {
+      const finale = document.getElementById('finale-screen');
+      for (let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3 + 1; // 1px to 4px
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        star.style.animationDelay = Math.random() * 2 + 's';
+        finale.appendChild(star);
+      }
+    }
+
+    function createShootingStars() {
+      const finale = document.getElementById('finale-screen');
+      for (let i = 0; i < 5; i++) {
+        const sStar = document.createElement('div');
+        sStar.className = 'shooting-star';
+        sStar.style.top = Math.random() * 50 + 'vh'; // Start in upper half
+        sStar.style.left = (Math.random() * 50 + 50) + 'vw'; // Start from right side
+        sStar.style.animationDelay = (Math.random() * 10) + 's'; // Random start times
+        finale.appendChild(sStar);
+      }
+    }
+
+    /* ==========================================
+       HORROR CANVAS (Dripping Blood Elements)
+       ========================================== */
+    function initHorrorCanvas() {
+      const canvas = document.getElementById('horror-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const drops = [];
+      for(let i=0; i<40; i++) {
+        drops.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          length: Math.random() * 25 + 10,
+          speed: Math.random() * 3 + 1,
+          opacity: Math.random() * 0.6 + 0.1
+        });
+      }
+
+      function drawBlood() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drops.forEach(drop => {
+          ctx.beginPath();
+          ctx.moveTo(drop.x, drop.y);
+          ctx.lineTo(drop.x, drop.y + drop.length);
+          ctx.strokeStyle = `rgba(180, 0, 0, ${drop.opacity})`;
+          ctx.lineWidth = 3;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          drop.y += drop.speed;
+          if (drop.y > canvas.height) {
+            drop.y = -30;
+            drop.x = Math.random() * canvas.width;
+          }
+        });
+        requestAnimationFrame(drawBlood);
+      }
+      drawBlood();
+    }
+  </script>
+</body>
+</html>

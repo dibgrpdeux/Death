@@ -1,504 +1,101 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ENSTP - بوابة الطالب الرقمية</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@400;700;900&family=Creepster&display=swap" rel="stylesheet">
-  
-  <style>
-    /* ==================================================
-       NORMAL THEME (The Bait)
-       ================================================== */
-    :root {
-      --primary-blue: #004b87;
-      --light-bg: #f4f7f6;
-      --text-dark: #333;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-    
-    body {
-      font-family: 'Cairo', sans-serif;
-      overflow-x: hidden;
-      background-color: var(--light-bg);
-      transition: background-color 0.1s;
-    }
-
-    #normal-site {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #ffffff, #e2ebf0);
-    }
-
-    .official-header {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .official-header h1 {
-      color: var(--primary-blue);
-      font-size: 2.2rem;
-      border-bottom: 3px solid var(--primary-blue);
-      padding-bottom: 10px;
-      display: inline-block;
-    }
-
-    .official-header p { color: #555; margin-top: 10px; font-size: 1.1rem; }
-
-    .login-box {
-      background: white;
-      padding: 40px;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 450px;
-    }
-
-    .form-group { margin-bottom: 20px; text-align: right; }
-    .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--text-dark); }
-    .form-group input {
-      width: 100%; padding: 12px;
-      border: 1px solid #ccc; border-radius: 4px;
-      font-family: 'Cairo'; font-size: 1rem;
-    }
-
-    .btn-official {
-      background: var(--primary-blue);
-      color: white; width: 100%; padding: 12px;
-      border: none; border-radius: 4px;
-      font-size: 1.2rem; font-weight: bold; cursor: pointer;
-      transition: background 0.3s;
-    }
-    .btn-official:hover { background: #003366; }
-
-    /* ==================================================
-       HORROR THEME (The Reality)
-       ================================================== */
-    #horror-site {
-      display: none;
-      min-height: 100vh;
-      background-color: #020202;
-      color: #e0e6ed;
-      position: relative;
-    }
-
-    .screen-overlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 5; pointer-events: none;
-      background: radial-gradient(circle at center, transparent 20%, rgba(0, 0, 0, 0.95) 100%),
-                  linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
-      background-size: 100% 100%, 100% 4px;
-    }
-
-    #horror-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-
-    .stage-container {
-      position: relative; z-index: 10;
-      max-width: 800px; margin: 0 auto;
-      padding: 40px 20px; text-align: center;
-    }
-
-    .hud-bar {
-      display: flex; justify-content: space-between;
-      background: rgba(10, 0, 0, 0.8); border: 1px solid #7a121c;
-      padding: 15px 20px; border-radius: 8px; margin-bottom: 30px;
-    }
-    
-    .hud-bar span { color: #ff2a3a; font-weight: bold; }
-
-    /* Dynamic Stage Styles */
-    .stage-box {
-      background: rgba(0, 0, 0, 0.85);
-      border: 2px solid #ff2a3a;
-      border-radius: 10px;
-      padding: 40px;
-      box-shadow: 0 0 40px rgba(255, 42, 58, 0.3);
-      transition: all 1s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stage-title {
-      font-family: 'Amiri', serif;
-      font-size: 2.5rem; color: #ff2a3a;
-      margin-bottom: 20px;
-      text-shadow: 2px 2px 5px #000;
-    }
-
-    .stage-text {
-      font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px;
-    }
-
-    .choice-btn {
-      display: block; width: 100%;
-      background: #111; border: 1px solid #444; color: white;
-      padding: 15px; margin: 15px 0; border-radius: 5px;
-      font-family: 'Cairo'; font-size: 1.1rem; cursor: pointer;
-      transition: all 0.3s; text-align: right;
-    }
-
-    .choice-btn:hover { background: #7a121c; border-color: #ff2a3a; transform: translateX(-10px); }
-
-    /* The Kill Screen (Jumpscare) */
-    #kill-screen {
-      display: none; position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh; z-index: 999;
-      background: #000; flex-direction: column;
-      justify-content: center; align-items: center;
-    }
-    
-    .bloody-text {
-      font-family: 'Amiri', serif;
-      font-size: 8rem; color: #ff0000;
-      text-shadow: 0 0 20px #ff0000, 0 0 50px #800000;
-      animation: drip 0.5s infinite alternate, shake 0.1s infinite;
-    }
-
-    @keyframes drip { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
-    @keyframes shake {
-      0% { transform: translate(2px, 1px) rotate(0deg); }
-      50% { transform: translate(-1px, -2px) rotate(-1deg); }
-      100% { transform: translate(-3px, 0px) rotate(1deg); }
-    }
-    @keyframes glitchOff {
-      0% { filter: invert(0); }
-      20% { filter: invert(1); background: red; }
-      100% { filter: invert(0); background: black; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- ==========================================
-       PHASE 1: THE NORMAL SITE (BAIT)
-       ========================================== -->
-  <div id="normal-site">
-    <div class="official-header">
-      <h1>المدرسة الوطنية العليا لأشغال العمومية</h1>
-      <p>البوابة الرقمية للطالب - ENSTP</p>
-    </div>
-    
-    <div class="login-box">
-      <div class="form-group">
-        <label>الاسم الكامل:</label>
-        <input type="text" id="student-name" placeholder="أدخل اسمك هنا...">
-      </div>
-      <div class="form-group">
-        <label>رقم التسجيل (اختياري):</label>
-        <input type="text" placeholder="مثال: 2026...">
-      </div>
-      <button class="btn-official" onclick="triggerNightmare()">تسجيل الدخول للدليل</button>
-    </div>
-  </div>
-
-  <!-- ==========================================
-       PHASE 2: THE HORROR EXPERIENCE
-       ========================================== -->
-  <div id="horror-site">
-    <canvas id="horror-canvas"></canvas>
-    <div class="screen-overlay"></div>
-
-    <div class="stage-container">
-      <div class="hud-bar">
-        <div>الضحية: <span id="hud-name">طالب</span></div>
-        <div>المرحلة: <span id="hud-stage">1 / 5</span></div>
-      </div>
-
-      <div class="stage-box" id="stage-box">
-        <h2 class="stage-title" id="stage-title">عنوان المرحلة</h2>
-        <p class="stage-text" id="stage-text">نص القصة...</p>
-        <div id="options-container"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Jumpscare Screen -->
-  <div id="kill-screen">
-    <h1 class="bloody-text">سأقتلك</h1>
-  </div>
-
-  <script>
-    /* ==========================================
-       AUDIO SYNTHESIS ENGINE (No external files)
+/* ==========================================
+       NIGHT SURVIVAL SCENARIOS (Algiers/Kouba)
        ========================================== */
-    let audioCtx = null;
-    let bgDrone = null;
-
-    function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-
-    // Creepy Background Drone
-    function startBackgroundHorror() {
-      initAudio();
-      if (bgDrone) return;
-      bgDrone = audioCtx.createOscillator();
-      const filter = audioCtx.createBiquadFilter();
-      const gain = audioCtx.createGain();
-      
-      bgDrone.type = 'sawtooth';
-      bgDrone.frequency.value = 40; // Very low rumble
-      
-      filter.type = 'lowpass';
-      filter.frequency.value = 150;
-      
-      gain.gain.value = 0.3;
-
-      bgDrone.connect(filter);
-      filter.connect(gain);
-      gain.connect(audioCtx.destination);
-      bgDrone.start();
-    }
-
-    // Synthetic Ear-Piercing Scream
-    function playScreamSound() {
-      initAudio();
-      
-      // Main screech oscillator
-      const osc1 = audioCtx.createOscillator();
-      const osc2 = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc1.type = 'square';
-      osc2.type = 'sawtooth';
-      
-      // Start high, drop fast, vibrate
-      osc1.frequency.setValueAtTime(1000, audioCtx.currentTime);
-      osc1.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.8);
-      
-      osc2.frequency.setValueAtTime(1200, audioCtx.currentTime);
-      osc2.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 1);
-
-      gain.gain.setValueAtTime(0.8, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(audioCtx.destination);
-      
-      osc1.start(); osc2.start();
-      osc1.stop(audioCtx.currentTime + 1.5);
-      osc2.stop(audioCtx.currentTime + 1.5);
-
-      // Attempt TTS Arabic creepy voice
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance("سأقتلك يا " + document.getElementById('hud-name').innerText);
-        msg.lang = 'ar-SA';
-        msg.pitch = 0.1;
-        msg.rate = 0.7;
-        window.speechSynthesis.speak(msg);
-      }
-    }
-
-    /* ==========================================
-       GAME LOGIC & STAGES
-       ========================================== */
-    let playerName = "طالب";
-    let currentStage = 0;
-
-    // Linear Story Progression
-    const stages = [
+    const riddlesPool = [
       {
-        title: "المرحلة الأولى: بوابة الجحيم",
-        text: "الضباب يغطي الساحة. البوابة مغلقة ولا يوجد حارس. الدليل يقول أن المدرسة في العاصمة. أين تقع المدرسة الوطنية العليا لأشغال العمومية للنجاة؟",
+        title: "الهروب تحت الأرض",
+        text: "إنها الثانية صباحاً. الكيان المجهول يطاردك في شوارع 'القاريدي' المظلمة. تحتاج للنزول تحت الأرض لتختبئ وتهرب... ما هي أقرب محطة ميترو لك؟",
         options: [
-          { text: "في منطقة القبة", correct: true },
-          { text: "في منطقة باب الزوار", correct: false }
-        ],
-        theme: { bg: "rgba(0,0,0,0.85)", border: "#ff2a3a" }
+          { text: "محطة ميترو حي البدر", correct: true },
+          { text: "محطة ميترو تافورة", correct: false }
+        ]
       },
       {
-        title: "المرحلة الثانية: غرفة الأرشيف",
-        text: "دخلت المبنى. الإضاءة ترمش. تجد أوراقاً متناثرة. هناك من يتنفس خلفك بالظلام... أي مصلحة مسؤولة عن تسليم كشف نقاطك للهروب؟",
+        title: "القهوة الملعونة",
+        text: "الساعة 3 فجراً. عيناك تنغلقان وإذا نمت سيقضي عليك الجاثوم. تحتاج إلى مقهى مفتوح أو آلة قهوة في مكان مضاء. أين تتجه لتبقى مستيقظاً؟",
         options: [
-          { text: "مكتبة المطالعة", correct: false },
-          { text: "مصلحة شؤون الطلبة والنيابة البيدغوجية", correct: true }
-        ],
-        theme: { bg: "rgba(30,0,0,0.9)", border: "#8b0000" } // Darker red
+          { text: "مقهى محطة البنزين في القبة", correct: true },
+          { text: "حديقة التجارب المظلمة", correct: false }
+        ]
       },
       {
-        title: "المرحلة الثالثة: دقات ساعة البرج",
-        text: "صوت خطوات تقترب بسرعة. الأستاذ الميت يبحث عن الغائبين! كم عدد الغيابات غير المبررة في الـ TD التي تؤدي لإقصائك فوراً؟",
+        title: "النزيف الصامت",
+        text: "لقد جرحك ذلك الشيء في الظلام وأنت تنزف بغزارة. تحتاج إلى إيقاف النزيف فوراً قبل أن يشم رائحة دمك. أين تجد الإسعافات ليلاً؟",
         options: [
-          { text: "3 غيابات وتُقصى", correct: true },
-          { text: "5 غيابات", correct: false }
-        ],
-        theme: { bg: "rgba(50,0,0,0.95)", border: "#ff0000" }, // Intense red
-        shake: true
+          { text: "مستشفى بشير منتوري (القبة)", correct: true },
+          { text: "العيادة الجامعية المغلقة", correct: false }
+        ]
       },
       {
-        title: "المرحلة الرابعة: المائدة الدموية",
-        text: "تصل إلى المطعم الجامعي، لكن الصحون مليئة بالتراب والخرسانة. شخص ضخم يمنعك من العبور ويطلب بطاقتك. ما هو الشرط الأساسي لدخول المطعم؟",
+        title: "الملاذ الأخير",
+        text: "توقفت حركة الميترو والترامواي. الشوارع فارغة تماماً والكلاب الضالة تعوي. ما هي المحطة الكبرى التي تجد فيها سيارات أجرة (تاكسي) وحافلات في هذا الوقت المتأخر؟",
         options: [
-          { text: "لا يهم، سأمر بالقوة", correct: false },
-          { text: "إظهار بطاقة الطالب الجامعية", correct: true }
-        ],
-        theme: { bg: "rgba(10,10,10,0.95)", border: "#550000" }
+          { text: "محطة الخروبة (Kharouba)", correct: true },
+          { text: "محطة زرالدة", correct: false }
+        ]
       },
       {
-        title: "المرحلة الأخيرة: المخرج السري",
-        text: "وصلت للباب الأخير! الظلال تحيط بك من كل مكان. السؤال الأخير: كيف يتم تقييمك في التطبيقات الموجهة (TD) لتنجح وتخرج من هنا؟",
+        title: "الدواء المر",
+        text: "أصابتك حمى شديدة وبدأت تهلوس وترى أشباحاً تقترب. تحتاج لدواء مهدئ فوراً. أين ستجد الدواء في الرابعة صباحاً؟",
         options: [
-          { text: "الاختبارات القصيرة (Interros) والمشاركة", correct: true },
-          { text: "الحضور فقط يكفي للنجاح", correct: false }
-        ],
-        theme: { bg: "rgba(80,0,0,0.98)", border: "#ffffff" }, // Final pure terror
-        shake: true
+          { text: "صيدلية المناوبة (Garde) في وسط القبة", correct: true },
+          { text: "المركز التجاري باب الزوار", correct: false }
+        ]
+      },
+      {
+        title: "صوت السكك الحديدية",
+        text: "تسمع صوت صفارة بعيدة وسط الضباب. هناك قطار ليلي لنقل البضائع قد تنسل داخله وتهرب من العاصمة. أين تقع أقرب محطة قطار لك؟",
+        options: [
+          { text: "محطة قطار حسين داي", correct: true },
+          { text: "محطة آغا في وسط العاصمة", correct: false }
+        ]
+      },
+      {
+        title: "تقاطع الموت",
+        text: "أنت تجري باتجاه مسار الترامواي. التيار الكهربائي مقطوع، لكنك تحتاج للوصول إلى أقرب محطة التقاء (Correspondance) لتجد مخرجاً... ما هي؟",
+        options: [
+          { text: "محطة المعدومين (Les Fusillés)", correct: true },
+          { text: "محطة جامعة باب الزوار", correct: false }
+        ]
+      },
+      {
+        title: "جوع منتصف الليل",
+        text: "لم تأكل شيئاً منذ يومين. المطعم الجامعي مغلق، وخطوات ثقيلة تقترب من غرفتك. أين تجد طعاماً سريعاً في الشارع ليلاً قبل أن تفقد وعيك؟",
+        options: [
+          { text: "محلات الشوارما في القبة أو حسين داي", correct: true },
+          { text: "غابة بن عكنون المهجورة", correct: false }
+        ]
+      },
+      {
+        title: "طريق النجاة",
+        text: "وجدت سيارة مركونة ومفتاحها بداخلها! شغلت المحرك، لكن الظلال تسد الطرق الفرعية. ما هو الطريق السريع الأقرب للقبة للهروب؟",
+        options: [
+          { text: "الطريق السريع الجنوبي (Rocade Sud)", correct: true },
+          { text: "طريق الكورنيش نحو البحر", correct: false }
+        ]
+      },
+      {
+        title: "المكان الآمن",
+        text: "الشيء الذي يطاردك لا يقترب من الأضواء الساطعة ولا من الأماكن المحروسة. أين يمكنك الجلوس بأمان حتى طلوع الفجر؟",
+        options: [
+          { text: "بالقرب من مركز الشرطة المركزي بالقبة", correct: true },
+          { text: "في قبو المدرسة الوطنية للأشغال العمومية", correct: false }
+        ]
+      },
+      {
+        title: "السرير البارد",
+        text: "وصلت أخيراً إلى سكنك الجامعي بعد منتصف الليل، لكن الباب الرئيسي مقفل وحارس الإقامة نائم. كيف تتصرف لتنجو من الليل؟",
+        options: [
+          { text: "الانتظار في مكان مضاء حتى يفتح الباب", correct: true },
+          { text: "القفز فوق السور المليء بالزجاج المكسور", correct: false }
+        ]
+      },
+      {
+        title: "العطش القاتل",
+        text: "ركضت لساعات حتى جف ريقك. تحتاج لقارورة ماء لكي تستعيد طاقتك وتكمل الهرب. المحلات الكبرى مغلقة. أين تذهب؟",
+        options: [
+          { text: "أكشاك التبغ (Cosmétiques/Tabac) المفتوحة ليلاً", correct: true },
+          { text: "شرب الماء من نافورة قديمة في مقبرة", correct: false }
+        ]
       }
     ];
-
-    function triggerNightmare() {
-      const nameInput = document.getElementById('student-name').value.trim();
-      if (nameInput) playerName = nameInput;
-      document.getElementById('hud-name').innerText = playerName;
-
-      // 1. Freeze normal site, flash screen
-      document.body.style.animation = "glitchOff 1.5s linear";
-      initAudio(); // Initialize audio context on first click
-      
-      setTimeout(() => {
-        // 2. Hide normal, show horror
-        document.getElementById('normal-site').style.display = 'none';
-        document.getElementById('horror-site').style.display = 'block';
-        startBackgroundHorror();
-        loadStage(currentStage);
-        initHorrorCanvas();
-      }, 1500);
-    }
-
-    function loadStage(index) {
-      if (index >= stages.length) {
-        showWinScreen();
-        return;
-      }
-
-      const stage = stages[index];
-      document.getElementById('hud-stage').innerText = `${index + 1} / 5`;
-      document.getElementById('stage-title').innerText = stage.title;
-      
-      // Personalize the text
-      let personalizedText = stage.text.replace("دخلت", `دخلت يا ${playerName}`);
-      document.getElementById('stage-text').innerText = personalizedText;
-
-      // Update Theme (Design changes as requested)
-      const box = document.getElementById('stage-box');
-      box.style.background = stage.theme.bg;
-      box.style.borderColor = stage.theme.border;
-      
-      if (stage.shake) {
-        box.style.animation = "shake 0.5s infinite";
-      } else {
-        box.style.animation = "none";
-      }
-
-      // Render Options
-      const container = document.getElementById('options-container');
-      container.innerHTML = '';
-      stage.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.innerText = opt.text;
-        btn.onclick = () => handleChoice(opt.correct);
-        container.appendChild(btn);
-      });
-    }
-
-    function handleChoice(isCorrect) {
-      if (isCorrect) {
-        // Success -> Next Stage
-        currentStage++;
-        loadStage(currentStage);
-      } else {
-        // Fail -> JUMPSCARE & DEATH
-        triggerDeath();
-      }
-    }
-
-    function triggerDeath() {
-      // Show bloody screen and scream
-      const killScreen = document.getElementById('kill-screen');
-      killScreen.style.display = 'flex';
-      playScreamSound();
-
-      // Reset after a few seconds
-      setTimeout(() => {
-        killScreen.style.display = 'none';
-        currentStage = 0; // Restart game
-        loadStage(currentStage);
-      }, 4000);
-    }
-
-    function showWinScreen() {
-      const box = document.getElementById('stage-box');
-      box.innerHTML = `
-        <h2 style="color:#d4af37; font-size:3rem; font-family:'Amiri';">نجوت... مؤقتاً</h2>
-        <p style="font-size:1.5rem; margin-top:20px;">أحسنت يا ${playerName}. لقد قرأت دليل ENSTP جيداً. أبواب المدرسة تُفتح لك في الواقع... نتمنى لك دراسة موفقة!</p>
-        <button class="choice-btn" style="text-align:center; background:#d4af37; color:#000;" onclick="location.reload()">العودة للواقع</button>
-      `;
-      box.style.animation = "none";
-      box.style.borderColor = "#d4af37";
-      if(bgDrone) { bgDrone.stop(); bgDrone = null; }
-    }
-
-    /* ==========================================
-       BACKGROUND ANIMATION ENGINE (Red Mist)
-       ========================================== */
-    function initHorrorCanvas() {
-      const canvas = document.getElementById('horror-canvas');
-      const ctx = canvas.getContext('2d');
-      let particles = [];
-
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resize);
-      resize();
-
-      for (let i = 0; i < 40; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 100 + 50,
-          speedX: Math.random() * 2 - 1,
-          speedY: Math.random() * 1 - 0.5,
-          alpha: Math.random() * 0.3 + 0.1
-        });
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-          p.x += p.speedX; p.y += p.speedY;
-          if (p.x < -p.r) p.x = canvas.width + p.r;
-          if (p.x > canvas.width + p.r) p.x = -p.r;
-          if (p.y < -p.r) p.y = canvas.height + p.r;
-          if (p.y > canvas.height + p.r) p.y = -p.r;
-
-          ctx.beginPath();
-          let grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-          
-          // Color changes based on stage (gets redder)
-          let color = currentStage >= 2 ? `rgba(255, 0, 0, ${p.alpha})` : `rgba(150, 20, 20, ${p.alpha})`;
-          
-          grad.addColorStop(0, color);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          ctx.fillStyle = grad;
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        requestAnimationFrame(animate);
-      }
-      animate();
-    }
-  </script>
-</body>
-</html>
-
